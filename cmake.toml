@@ -1,0 +1,45 @@
+# Reference: https://build-cpp.github.io/cmkr/cmake-toml
+[cmake]
+version = "3.31"
+cmkr-include = "cmkr.cmake"
+
+[project]
+name = "desktop-app-template"
+description = "A simple template for cross-platform apps in C++"
+languages = ["C", "CXX"]
+
+[find-package.glfw3]
+required = true
+
+[vcpkg]
+version = "2026.02.27"
+packages = ["glfw3"]
+
+[variables]
+CMAKE_EXPORT_COMPILE_COMMANDS = true
+
+[target.template_app]
+type = "executable" # static, shared
+sources = [
+    "src/**.cpp",
+
+    # Dear ImGui
+    "external/imgui/imgui.cpp",
+    "external/imgui/imgui_draw.cpp",
+    "external/imgui/imgui_tables.cpp",
+    "external/imgui/imgui_widgets.cpp",
+    "external/imgui/backends/imgui_impl_glfw.cpp",
+    "external/imgui/backends/imgui_impl_opengl3.cpp",
+
+    # GLAD
+    "external/glad/src/glad.c",
+]
+include-directories = [
+    "external",
+    "external/imgui",
+    "external/imgui/backends",
+    "external/glad/include",
+    "src",
+]
+compile-features = ["cxx_std_23"]
+link-libraries = ["glfw"]
