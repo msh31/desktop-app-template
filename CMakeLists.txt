@@ -74,6 +74,7 @@ set(template_app_SOURCES
 	"external/imgui/imgui_draw.cpp"
 	"external/imgui/imgui_tables.cpp"
 	"external/imgui/imgui_widgets.cpp"
+	"src/app/app.cpp"
 	"src/main.cpp"
 )
 
