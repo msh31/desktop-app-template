@@ -1,4 +1,5 @@
 #include "app.hpp"
+#include "globals.hpp"
 
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
@@ -15,6 +16,16 @@ void App::init() {
     }
 }
 
+void App::render_ui() {
+    ImGui::Text(APP_NAME);
+    ImGui::Separator();
+
+    if(ImGui::Button("Click Me")) {
+        std::cout << "Button 'Click Me' has heen clicked!\n";
+    }
+
+}
+
 bool App::setup_opengl() {
     if(!glfwInit()) {
         std::cerr << "Failed to initialize GLFW.\n";
@@ -26,14 +37,14 @@ bool App::setup_opengl() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // no old OpenGL
 
-    window = glfwCreateWindow(1600, 900, "SaveManager", nullptr, nullptr);
+    window = glfwCreateWindow(DEF_RES_W, DEF_RES_H, APP_NAME, nullptr, nullptr);
     if(window == nullptr) {
         std::cerr << "Failed to create GLFW window. OpenGL 3.3 support is required!\n";
         glfwTerminate();
         return false;
     }
 
-    glfwSetWindowSizeLimits(window, 1280, 720, 5120, 2880); //720p -> 5K, 16:9
+    glfwSetWindowSizeLimits(window, MIN_RES_W, MIN_RES_H, MAX_RES_W, MAX_RES_H); 
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1);
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
@@ -78,8 +89,7 @@ void App::render() {
 
     ImGui::Begin("Main Window", nullptr, window_flags);
 
-    ImGui::Text("Template");
-    ImGui::Separator();
+    App::render_ui();
 
     ImGui::End();
     ImGui::Render();

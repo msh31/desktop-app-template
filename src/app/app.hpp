@@ -13,4 +13,6 @@ public:
 private:
     bool setup_opengl();
     bool setup_imgui();
+
+    void render_ui();
 };
