@@ -43,3 +43,4 @@ include-directories = [
 ]
 compile-features = ["cxx_std_23"]
 link-libraries = ["glfw"]
+precompile-headers = ["src/pch.hpp"]
