@@ -4,25 +4,42 @@ version = "3.31"
 cmkr-include = "cmkr.cmake"
 
 [project]
-name = "ImGui Framework"
-description = "A lightweight C++ framework for building cross-platform desktop apps with ImGui and OpenGL"
+name = "Desktop App Template"
+description = "A C++ template for building cross-platform desktop apps with ImGui and OpenGL"
 languages = ["C", "CXX"]
-
-[find-package.glad]
-required = true
-[find-package.glfw3]
-required = true
-[find-package.imgui]
-required = true
-[find-package.nlohmann_json]
-required = true
-[find-package.spdlog]
-required = true
-[find-package.GTest]
-required = true
 
 [variables]
 CMAKE_EXPORT_COMPILE_COMMANDS = true
+
+# dependencies
+[fetch-content.glfw]
+git = "https://github.com/glfw/glfw"
+tag = "3.5.1"
+[fetch-content.nlohmann_json]
+git = "https://github.com/nlohmann/json"
+tag = "v3.12.0"
+[fetch-content.imgui]
+git = "https://github.com/ocornut/imgui"
+tag = "v1.92.9b"
+[fetch-content.spdlog]
+git = "https://github.com/gabime/spdlog"
+tag = "v1.17.0"
+[fetch-content.gtest]
+git = "https://github.com/google/googletest"
+tag = "v1.18.0"
+
+[target.imgui]
+type = "static"
+sources = [
+    "${imgui_SOURCE_DIR}/imgui.cpp",
+    "${imgui_SOURCE_DIR}/imgui_draw.cpp",
+    "${imgui_SOURCE_DIR}/imgui_tables.cpp",
+    "${imgui_SOURCE_DIR}/imgui_widgets.cpp",
+    "${imgui_SOURCE_DIR}/backends/imgui_impl_glfw.cpp",
+    "${imgui_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp"
+]
+include-directories = ["${imgui_SOURCE_DIR}", "${imgui_SOURCE_DIR}/backends"]
+compile-features = ["cxx_std_23"]
 
 [target.template_lib]
 type = "static"
@@ -36,33 +53,25 @@ precompile-headers = ["lib/include/lib_pch.hpp"]
 type = "executable"
 sources = [
     "src/**.cpp",
-
     "vendor/imgui/imgui_stdlib.cpp",
+    "vendor/glad/**.c",
 ]
 include-directories = [
     "src",
     "vendor/imgui",
+    "vendor/glad/include",
 ]
 compile-features = ["cxx_std_23"]
-link-libraries = ["template_lib", "glad::glad", "glfw", "imgui::imgui", "spdlog::spdlog"]
+link-libraries = ["template_lib", "glfw", "imgui", "spdlog::spdlog"]
 precompile-headers = ["src/pch.hpp"]
-cmake-after = """
-find_path(IMGUI_INCLUDE_DIR imgui.h REQUIRED)
-cmake_path(GET IMGUI_INCLUDE_DIR PARENT_PATH IMGUI_ROOT_DIR)
-target_include_directories(template_app PRIVATE "${IMGUI_ROOT_DIR}/res/bindings")
-target_sources(template_app PRIVATE
-    "${IMGUI_ROOT_DIR}/res/bindings/imgui_impl_glfw.cpp"
-    "${IMGUI_ROOT_DIR}/res/bindings/imgui_impl_opengl3.cpp"
-)
-"""
 
 [target.template_tests]
 type = "executable"
 sources = ["tests/**.cpp"]
-include-directories = ["src"]
+include-directories = ["lib/include"]
 compile-features = ["cxx_std_23"]
 link-libraries = ["GTest::gtest_main"]
-precompile-headers = ["src/pch.hpp"]
+precompile-headers = ["lib/include/lib_pch.hpp"]
 cmake-after = """
 enable_testing()
 add_test(NAME template_tests COMMAND template_tests)

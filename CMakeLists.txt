@@ -27,26 +27,89 @@ endif()
 # Variables
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-project("ImGui Framework"
+project("Desktop App Template"
 	LANGUAGES
 		C
 		CXX
 	DESCRIPTION
-		"A lightweight C++ framework for building cross-platform desktop apps with ImGui and OpenGL"
+		"A C++ template for building cross-platform desktop apps with ImGui and OpenGL"
 )
 
-# Packages
-find_package(glad REQUIRED)
+include(FetchContent)
 
-find_package(glfw3 REQUIRED)
+# Fix warnings about DOWNLOAD_EXTRACT_TIMESTAMP
+if(POLICY CMP0135)
+	cmake_policy(SET CMP0135 NEW)
+endif()
+message(STATUS "Fetching glfw (3.5.1)...")
+FetchContent_Declare(glfw
+	GIT_REPOSITORY
+		"https://github.com/glfw/glfw"
+	GIT_TAG
+		3.5.1
+)
+FetchContent_MakeAvailable(glfw)
 
-find_package(imgui REQUIRED)
+message(STATUS "Fetching nlohmann_json (v3.12.0)...")
+FetchContent_Declare(nlohmann_json
+	GIT_REPOSITORY
+		"https://github.com/nlohmann/json"
+	GIT_TAG
+		v3.12.0
+)
+FetchContent_MakeAvailable(nlohmann_json)
 
-find_package(nlohmann_json REQUIRED)
+message(STATUS "Fetching imgui (v1.92.9b)...")
+FetchContent_Declare(imgui
+	GIT_REPOSITORY
+		"https://github.com/ocornut/imgui"
+	GIT_TAG
+		v1.92.9b
+)
+FetchContent_MakeAvailable(imgui)
 
-find_package(spdlog REQUIRED)
+message(STATUS "Fetching spdlog (v1.17.0)...")
+FetchContent_Declare(spdlog
+	GIT_REPOSITORY
+		"https://github.com/gabime/spdlog"
+	GIT_TAG
+		v1.17.0
+)
+FetchContent_MakeAvailable(spdlog)
 
-find_package(GTest REQUIRED)
+message(STATUS "Fetching gtest (v1.18.0)...")
+FetchContent_Declare(gtest
+	GIT_REPOSITORY
+		"https://github.com/google/googletest"
+	GIT_TAG
+		v1.18.0
+)
+FetchContent_MakeAvailable(gtest)
+
+# Target: imgui
+set(imgui_SOURCES
+	"${imgui_SOURCE_DIR}/backends/imgui_impl_glfw.cpp"
+	"${imgui_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp"
+	"${imgui_SOURCE_DIR}/imgui.cpp"
+	"${imgui_SOURCE_DIR}/imgui_draw.cpp"
+	"${imgui_SOURCE_DIR}/imgui_tables.cpp"
+	"${imgui_SOURCE_DIR}/imgui_widgets.cpp"
+	cmake.toml
+)
+
+add_library(imgui STATIC)
+
+target_sources(imgui PRIVATE ${imgui_SOURCES})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${imgui_SOURCES})
+
+target_compile_features(imgui PUBLIC
+	cxx_std_23
+)
+
+target_include_directories(imgui PUBLIC
+	${imgui_SOURCE_DIR}
+	"${imgui_SOURCE_DIR}/backends"
+)
 
 # Target: template_lib
 set(template_lib_SOURCES
@@ -101,6 +164,7 @@ set(template_app_SOURCES
 	"src/frontend/views/pipeline/pipeline_demo.cpp"
 	"src/frontend/views/settings/settings_view.cpp"
 	"src/main.cpp"
+	"vendor/glad/src/gl.c"
 	"vendor/imgui/imgui_stdlib.cpp"
 )
 
@@ -116,13 +180,13 @@ target_compile_features(template_app PRIVATE
 target_include_directories(template_app PRIVATE
 	src
 	"vendor/imgui"
+	"vendor/glad/include"
 )
 
 target_link_libraries(template_app PRIVATE
 	template_lib
-	glad::glad
 	glfw
-	imgui::imgui
+	imgui
 	spdlog::spdlog
 )
 
@@ -134,15 +198,6 @@ get_directory_property(CMKR_VS_STARTUP_PROJECT DIRECTORY ${PROJECT_SOURCE_DIR} D
 if(NOT CMKR_VS_STARTUP_PROJECT)
 	set_property(DIRECTORY ${PROJECT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT template_app)
 endif()
-
-set(CMKR_TARGET template_app)
-find_path(IMGUI_INCLUDE_DIR imgui.h REQUIRED)
-cmake_path(GET IMGUI_INCLUDE_DIR PARENT_PATH IMGUI_ROOT_DIR)
-target_include_directories(template_app PRIVATE "${IMGUI_ROOT_DIR}/res/bindings")
-target_sources(template_app PRIVATE
-    "${IMGUI_ROOT_DIR}/res/bindings/imgui_impl_glfw.cpp"
-    "${IMGUI_ROOT_DIR}/res/bindings/imgui_impl_opengl3.cpp"
-)
 
 # Target: template_tests
 set(template_tests_SOURCES
@@ -160,7 +215,7 @@ target_compile_features(template_tests PRIVATE
 )
 
 target_include_directories(template_tests PRIVATE
-	src
+	"lib/include"
 )
 
 target_link_libraries(template_tests PRIVATE
@@ -168,7 +223,7 @@ target_link_libraries(template_tests PRIVATE
 )
 
 target_precompile_headers(template_tests PRIVATE
-	"src/pch.hpp"
+	"lib/include/lib_pch.hpp"
 )
 
 get_directory_property(CMKR_VS_STARTUP_PROJECT DIRECTORY ${PROJECT_SOURCE_DIR} DEFINITION VS_STARTUP_PROJECT)
