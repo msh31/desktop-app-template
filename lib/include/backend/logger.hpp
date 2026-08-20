@@ -10,6 +10,8 @@
     #include <spdlog/sinks/stdout_color_sinks.h>
 #endif
 
+#define MSG_LIMIT 500
+
 template <typename Mutex> class ringbuffer_sink : public spdlog::sinks::base_sink<Mutex> {
     public:
         void clear( ) {
@@ -30,7 +32,7 @@ template <typename Mutex> class ringbuffer_sink : public spdlog::sinks::base_sin
             spdlog::memory_buf_t formatted;
             spdlog::sinks::base_sink<Mutex>::formatter_->format( msg, formatted );
 
-            if ( messages.size( ) >= 500 ) messages.pop_front( );
+            if ( messages.size( ) >= MSG_LIMIT ) messages.pop_front( );
             messages.emplace_back( formatted.data( ), formatted.size( ) );
         }
         void flush_( ) override {}
