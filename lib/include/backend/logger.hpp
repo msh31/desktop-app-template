@@ -52,7 +52,7 @@ inline void setup_logger( std::string_view pattern = "[%l] %d-%m-%Y %H:%M:%S - %
     std::vector<spdlog::sink_ptr> sinks{ g_ringbuffer_sink };
     if ( fs::exists( config_dir ) ) {
         sinks.push_back(
-            std::make_shared<spdlog::sinks::daily_file_sink_mt>( ( paths::log_dir( ) / "app.log" ).string( ), 0, 0 ) );
+            std::make_shared<spdlog::sinks::daily_file_sink_mt>( ( paths::log_file( ) ).string( ), 0, 0 ) );
 #ifndef NDEBUG
         sinks.push_back( std::make_shared<spdlog::sinks::stdout_color_sink_mt>( ) );
 #endif

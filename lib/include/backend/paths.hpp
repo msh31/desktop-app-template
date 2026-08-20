@@ -53,5 +53,5 @@ namespace paths {
     }
 #endif
 
-    inline fs::path log_file( ) { return log_dir( ) / std::format( "{}.log", APP_NAME ); }
+    inline fs::path log_file( ) { return log_dir( ) / std::format( "{}.log", APP_NAME.data( ) ); }
 }; // namespace paths
