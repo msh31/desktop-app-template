@@ -12,16 +12,15 @@ CBaseView* CSideBar::render( CBaseView* active ) {
     CBaseView* r_item = nullptr;
 
     if ( !collapsed ) {
-        ImGui::PushFont( CFontManager::get( ).get_font( "jbm_reg_xl" ).value_or( nullptr ) );
-        ImGui::TextDisabled( "%s", APP_NAME.data( ) );
-        ImGui::PopFont( );
-        ImGui::SameLine( );
-        ImGui::SetCursorPosX( 26.0f * 10.f );
         ImGui::PushID( "uncollapsed_button" );
         if ( ImGui::Button( ICON_MENU ) ) {
             collapsed = !collapsed;
         }
         ImGui::PopID( );
+        ImGui::SameLine( );
+        ImGui::PushFont( CFontManager::get( ).get_font( "jbm_reg_xl" ).value_or( nullptr ) );
+        ImGui::TextDisabled( "%s", APP_NAME.data( ) );
+        ImGui::PopFont( );
         ImGui::Separator( );
         ImGui::Spacing( );
     }
