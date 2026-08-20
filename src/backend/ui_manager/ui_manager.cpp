@@ -1,8 +1,10 @@
 #include "ui_manager.hpp"
+#include <backend/logger.hpp>
 
 CUIManager::CUIManager( std::unique_ptr<IShell> shell ) : m_shell( std::move( shell ) ) {}
 
 CBaseView* CUIManager::add_view( ViewConfig cfg ) {
+    SPDLOG_INFO( "Adding view: {}", cfg.label );
     CBaseView* raw = cfg.view.get( );
     CBaseView::ViewItem item{ cfg.icon, cfg.label, raw };
 

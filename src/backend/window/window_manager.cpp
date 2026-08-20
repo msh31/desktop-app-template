@@ -4,6 +4,8 @@
 #include <frontend/fonts/font_registry.hpp>
 #include <frontend/theme/theme.hpp>
 
+#include <backend/logger.hpp>
+
 namespace {
     constexpr int kMinWindowW = 640;
     constexpr int kMinWindowH = 480;
@@ -57,6 +59,7 @@ static void error_callback( int error, const char* description ) {
 }
 
 void CWindowManager::setup_opengl( ) {
+    SPDLOG_INFO( "Setting up OpenGL.." );
     glfwSetErrorCallback( error_callback );
     if ( !glfwInit( ) ) {
         throw std::runtime_error( "Failed to initialize GLFW" );
@@ -110,6 +113,7 @@ void CWindowManager::apply_content_scale( float scale ) {
 }
 
 void CWindowManager::setup_imgui( ) {
+    SPDLOG_INFO( "Setting up ImGui.." );
     ImGui::CreateContext( );
 
     ImGuiIO& io = ImGui::GetIO( );

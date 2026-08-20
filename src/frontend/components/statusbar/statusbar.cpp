@@ -1,7 +1,15 @@
 #include "statusbar.hpp"
 
-void CStatusBar::add_left( Item item ) { m_left.push_back( item ); }
-void CStatusBar::add_right( Item item ) { m_right.push_back( item ); }
+#include <backend/logger.hpp>
+
+void CStatusBar::add_left( Item item ) {
+    SPDLOG_INFO( "Adding left item: {}", item.label );
+    m_left.push_back( item );
+}
+void CStatusBar::add_right( Item item ) {
+    SPDLOG_INFO( "Adding right item: {}", item.label );
+    m_right.push_back( item );
+}
 
 void CStatusBar::render_item( const Item& item ) {
     if ( item.dot_color ) {

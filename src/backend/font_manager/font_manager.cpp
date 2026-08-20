@@ -1,4 +1,5 @@
 #include "font_manager.hpp"
+#include <backend/logger.hpp>
 
 static const ImWchar icon_ranges[] = { 0xf000, 0xf2e0, 0 };
 

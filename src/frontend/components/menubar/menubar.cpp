@@ -1,7 +1,11 @@
 #include "menubar.hpp"
 #include <backend/branding.hpp>
+#include <backend/logger.hpp>
 
-void CMenuBar::add_group( CMenuBarGroup group ) { m_groups.push_back( std::move( group ) ); }
+void CMenuBar::add_group( CMenuBarGroup group ) {
+    SPDLOG_INFO( "Adding group: {}", group.label );
+    m_groups.push_back( std::move( group ) );
+}
 
 void CMenuBar::render_item( const CMenuBarItem& item, float btn_h ) {
     bool is_active = item.state && *item.state;
