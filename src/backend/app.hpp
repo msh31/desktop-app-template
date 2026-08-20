@@ -6,7 +6,7 @@
 // #include <frontend/layout/tabbar/tabbar.hpp>
 #include <frontend/layout/sidebar/sidebar.hpp>
 // #include <frontend/layout/ribbon/ribbon.hpp>
-#include <frontend/layout/none/none.hpp>
+// #include <frontend/layout/none/none.hpp>
 
 class CApp {
     public:
@@ -18,8 +18,8 @@ class CApp {
     private:
         CConfig& m_config;
         // CUIManager m_ui_manager { std::make_unique<CTabbarShell>() };
-        // CUIManager m_ui_manager{ std::make_unique<CSidebarShell>( ) };
-        CUIManager m_ui_manager{ std::make_unique<CNoShell>( ) }; // kinda sucks
+        CUIManager m_ui_manager{ std::make_unique<CSidebarShell>( ) };
+        // CUIManager m_ui_manager{ std::make_unique<CNoShell>( ) }; // kinda sucks
         // CUIManager m_ui_manager { std::make_unique<CRibbonShell>() };
 
         bool m_toggle_a = false, m_toggle_b = false, m_toggle_c = true, m_toggle_d = false, m_toggle_e = false;

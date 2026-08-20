@@ -11,8 +11,8 @@ class CCacheDemoView : public CBaseView {
 
     private:
         struct CacheData {
-                std::string      name;
-                float            floaty;
+                std::string name;
+                float floaty;
                 std::vector<int> numbers;
         };
 

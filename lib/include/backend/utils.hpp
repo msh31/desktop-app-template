@@ -23,8 +23,8 @@ inline std::string get_username( ) {
 inline void open_in_file_manager( const char* path ) {
 #ifdef __linux__
     pid_t pid = fork( );
-    pid_t w   = 0;
-    int   status;
+    pid_t w = 0;
+    int status;
 
     if ( pid > 0 ) {
         w = waitpid( pid, &status, 0 );
@@ -50,10 +50,10 @@ inline void open_in_file_manager( const char* path ) {
 #endif
 #ifdef __APPLE__
     extern char** environ;
-    pid_t         pid;
+    pid_t pid;
 
     const char* argv[] = { "open", path, nullptr };
-    int         status = posix_spawn( &pid, "/usr/bin/open", nullptr, nullptr, (char* const*)argv, environ );
+    int status = posix_spawn( &pid, "/usr/bin/open", nullptr, nullptr, (char* const*)argv, environ );
     if ( status == 0 ) {
         waitpid( pid, &status, 0 );
     }

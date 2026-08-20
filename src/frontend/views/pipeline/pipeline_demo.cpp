@@ -4,7 +4,7 @@
 
 CPipelineView::CPipelineView( ) {
     m_pipeline.build( );
-    m_input  = "     The word 'LEPEL' is a palindrome     ";
+    m_input = "     The word 'LEPEL' is a palindrome     ";
     m_result = m_pipeline.run( m_input );
 };
 

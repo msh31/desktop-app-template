@@ -13,7 +13,7 @@ CBaseView* CSideBar::render( CBaseView* active ) {
 
     if ( !collapsed ) {
         ImGui::PushFont( CFontManager::get( ).get_font( "jbm_reg_xl" ).value_or( nullptr ) );
-        ImGui::TextDisabled( "%s", APP_NAME.c_str( ) );
+        ImGui::TextDisabled( "%s", APP_NAME.data( ) );
         ImGui::PopFont( );
         ImGui::SameLine( );
         ImGui::SetCursorPosX( 26.0f * 10.f );

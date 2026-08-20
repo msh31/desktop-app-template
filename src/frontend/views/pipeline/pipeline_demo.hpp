@@ -12,10 +12,10 @@ class CPipelineView : public CBaseView {
         void on_exit( ) override;
 
     private:
-        CTextPipeline                             m_pipeline;
-        std::string                               m_input;
+        CTextPipeline m_pipeline;
+        std::string m_input;
         std::expected<std::string, PipelineError> m_result;
-        bool                                      m_has_logged_error = false;
+        bool m_has_logged_error = false;
 
         std::string_view pe_to_string( PipelineError e );
 };

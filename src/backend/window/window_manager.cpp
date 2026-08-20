@@ -67,21 +67,21 @@ void CWindowManager::setup_opengl( ) {
     glfwWindowHint( GLFW_CONTEXT_VERSION_MINOR, 3 );
     glfwWindowHint( GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE ); // no old OpenGL
 
-    int width  = m_config.settings.window_w;
+    int width = m_config.settings.window_w;
     int height = m_config.settings.window_h;
     if ( width <= 0 || height <= 0 ) {
         // no persisted size yet - derive a sane default from the primary monitor instead of a hardcoded resolution
-        width  = kMinWindowW;
+        width = kMinWindowW;
         height = kMinWindowH;
         if ( GLFWmonitor* monitor = glfwGetPrimaryMonitor( ) ) {
             int mon_x, mon_y, mon_w, mon_h;
             glfwGetMonitorWorkarea( monitor, &mon_x, &mon_y, &mon_w, &mon_h );
-            width  = std::max( kMinWindowW, static_cast<int>( mon_w * kDefaultWindowFraction ) );
+            width = std::max( kMinWindowW, static_cast<int>( mon_w * kDefaultWindowFraction ) );
             height = std::max( kMinWindowH, static_cast<int>( mon_h * kDefaultWindowFraction ) );
         }
     }
 
-    m_window = glfwCreateWindow( width, height, APP_NAME.c_str( ), nullptr, nullptr );
+    m_window = glfwCreateWindow( width, height, APP_NAME.data( ), nullptr, nullptr );
     if ( m_window == nullptr ) {
         glfwTerminate( );
     }

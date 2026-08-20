@@ -3,15 +3,15 @@
 static const ImWchar icon_ranges[] = { 0xf000, 0xf2e0, 0 };
 
 void CFontManager::load_one( const FontData& fd ) {
-    ImGuiIO&     io = ImGui::GetIO( );
+    ImGuiIO& io = ImGui::GetIO( );
     ImFontConfig cfg;
     cfg.FontDataOwnedByAtlas = false; // data is embedded/static and outlives the atlas
 
     ImFont* font = nullptr;
     if ( fd.is_icon ) {
-        cfg.MergeMode        = true;
+        cfg.MergeMode = true;
         cfg.GlyphMinAdvanceX = fd.size;
-        font                 = io.Fonts->AddFontFromMemoryTTF( fd.data, fd.data_len, fd.size, &cfg, icon_ranges );
+        font = io.Fonts->AddFontFromMemoryTTF( fd.data, fd.data_len, fd.size, &cfg, icon_ranges );
     } else {
         font = io.Fonts->AddFontFromMemoryTTF( fd.data, fd.data_len, fd.size, &cfg );
     }
@@ -21,7 +21,8 @@ void CFontManager::load_one( const FontData& fd ) {
 }
 
 void CFontManager::load_all( const std::vector<FontData>& fonts ) {
-    for ( const auto& fd : fonts ) load_one( fd );
+    for ( const auto& fd : fonts )
+        load_one( fd );
 }
 
 std::optional<ImFont*> CFontManager::get_font( std::string_view font_name ) {

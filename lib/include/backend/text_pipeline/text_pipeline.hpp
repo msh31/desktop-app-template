@@ -5,13 +5,13 @@ using Stage = std::function<std::expected<std::string, PipelineError>( std::stri
 
 class CTextPipeline {
     public:
-        void                                      build( );
+        void build( );
         std::expected<std::string, PipelineError> run( std::string_view input );
 
         bool m_strip_whitespace = false;
-        bool m_lowercase        = false;
-        bool m_reverse          = true;
-        bool m_truncate         = false;
+        bool m_lowercase = false;
+        bool m_reverse = true;
+        bool m_truncate = false;
 
         bool m_is_built = false;
 

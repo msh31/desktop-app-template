@@ -43,7 +43,7 @@ void CApp::init( ) {
     m_ui_manager.set_menubar( std::move( m_menubar ) );
 
     m_statusbar.add_left( { "I am a statusbar", "X" } );
-    m_statusbar.add_right( { "Build", APP_VERSION.c_str( ) } );
+    m_statusbar.add_right( { "Build", APP_VERSION.data( ) } );
     m_ui_manager.set_statusbar( std::move( m_statusbar ) );
 }
 

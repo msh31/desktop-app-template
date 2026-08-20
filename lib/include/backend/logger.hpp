@@ -58,7 +58,7 @@ inline void setup_logger( std::string_view pattern = "[%l] %d-%m-%Y %H:%M:%S - %
 #endif
     }
 
-    auto app_logger = std::make_shared<spdlog::logger>( APP_NAME, sinks.begin( ), sinks.end( ) );
+    auto app_logger = std::make_shared<spdlog::logger>( APP_NAME.data( ), sinks.begin( ), sinks.end( ) );
     spdlog::set_default_logger( app_logger );
     spdlog::set_pattern( pattern.data( ) );
 }

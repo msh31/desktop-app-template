@@ -8,9 +8,9 @@
 
 int main( ) {
     try {
-        CConfig        config;
+        CConfig config;
         CWindowManager window( config );
-        CApp           app( config );
+        CApp app( config );
 
         app.init( );
         SPDLOG_INFO( "Initialized succesfully!" );

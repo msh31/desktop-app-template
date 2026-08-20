@@ -2,10 +2,10 @@
 
 namespace Notify {
     struct Notification {
-            std::string                           title;
-            std::string                           text;
-            float                                 duration;
-            float                                 last_height = 0.f;
+            std::string title;
+            std::string text;
+            float duration;
+            float last_height = 0.f;
             std::chrono::steady_clock::time_point start_time;
     };
     inline std::mutex notification_mutex;

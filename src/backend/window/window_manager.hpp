@@ -24,9 +24,9 @@ class CWindowManager {
         void run( std::function<void( )> fun );
 
     private:
-        CConfig&    m_config;
+        CConfig& m_config;
         GLFWwindow* m_window = nullptr;
-        float       m_content_scale = 1.0f;
+        float m_content_scale = 1.0f;
 
         void setup_opengl( );
         void setup_imgui( );
