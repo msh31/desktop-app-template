@@ -15,8 +15,6 @@
 #include <frontend/notification/notification.hpp>
 
 void CApp::init( ) {
-    setup_logger( );
-
     m_ui_manager.add_view( { std::make_unique<CHomeView>( ), ICON_HOME, "Home" } );
     m_ui_manager.add_view( { std::make_unique<CPipelineView>( ), ICON_PIPE, "Pipeline Demo" } );
     m_ui_manager.add_view( { std::make_unique<CDebugView>( ), ICON_BUG, "Debug" } );

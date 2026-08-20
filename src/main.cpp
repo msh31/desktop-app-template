@@ -8,6 +8,8 @@
 
 int main( ) {
     try {
+        setup_logger( );
+        SPDLOG_INFO( "==============={}===============", APP_NAME.data( ) );
         CConfig config;
         CWindowManager window( config );
         CApp app( config );

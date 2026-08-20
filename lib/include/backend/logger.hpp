@@ -40,27 +40,16 @@ using ringbuffer_sink_mt = ringbuffer_sink<std::mutex>;
 
 inline std::shared_ptr<ringbuffer_sink_mt> g_ringbuffer_sink;
 
-inline void setup_logger( std::string_view pattern = "[%l] %d-%m-%Y %H:%M:%S - %v (in: %@)" ) {
-    auto config_dir = paths::config_dir( );
-    if ( !fs::exists( config_dir ) ) {
-        std::error_code ec;
-        fs::create_directories( config_dir, ec );
-    }
-
+inline void setup_logger( ) {
     g_ringbuffer_sink = std::make_shared<ringbuffer_sink_mt>( );
 
     std::vector<spdlog::sink_ptr> sinks{ g_ringbuffer_sink };
-    if ( fs::exists( config_dir ) ) {
-        sinks.push_back(
-            std::make_shared<spdlog::sinks::daily_file_sink_mt>( ( paths::log_file( ) ).string( ), 0, 0 ) );
-#ifndef NDEBUG
-        sinks.push_back( std::make_shared<spdlog::sinks::stdout_color_sink_mt>( ) );
-#endif
-    }
+    sinks.push_back( std::make_shared<spdlog::sinks::stdout_color_sink_mt>( ) ); // TODO: confirm this doesnt make a
+                                                                                 // console window pop up - it shouldnt
+    sinks.push_back( std::make_shared<spdlog::sinks::daily_file_sink_mt>( ( paths::log_file( ) ).string( ), 0, 0 ) );
 
     auto app_logger = std::make_shared<spdlog::logger>( APP_NAME.data( ), sinks.begin( ), sinks.end( ) );
     spdlog::set_default_logger( app_logger );
-    spdlog::set_pattern( pattern.data( ) );
 }
 
 inline ringbuffer_sink_mt* get_ringbuffer_sink( ) { return g_ringbuffer_sink.get( ); }
