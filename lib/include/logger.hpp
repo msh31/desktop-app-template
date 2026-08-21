@@ -4,11 +4,8 @@
 
 #include <spdlog/sinks/base_sink.h>
 #include <spdlog/sinks/daily_file_sink.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/spdlog.h>
-
-#ifndef NDEBUG
-    #include <spdlog/sinks/stdout_color_sinks.h>
-#endif
 
 #define MSG_LIMIT 500
 
