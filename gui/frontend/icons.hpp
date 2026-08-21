@@ -7,6 +7,7 @@ static constexpr const char* ICON_HOME = "\xef\x80\x95";
 static constexpr const char* ICON_PIPE = "\xef\x83\xa8";
 static constexpr const char* ICON_BUG = "\xef\x86\x88";
 static constexpr const char* ICON_CACHE = "\xef\x8b\x9b";
+static constexpr const char* ICON_SCROLL = "\xef\x9c\x8e";
 
 static constexpr const char* ICON_NEW_FILE = "\xef\x81\xbc";
 static constexpr const char* ICON_OPEN = "\xef\x86\x88";

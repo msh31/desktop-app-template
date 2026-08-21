@@ -176,6 +176,7 @@ set(template_app_SOURCES
 	"gui/frontend/views/cache_demo/cache_demo_view.cpp"
 	"gui/frontend/views/debug/debug_view.cpp"
 	"gui/frontend/views/home/home_view.cpp"
+	"gui/frontend/views/log/log_view.cpp"
 	"gui/frontend/views/pipeline/pipeline_demo.cpp"
 	"gui/frontend/views/settings/settings_view.cpp"
 	"gui/main.cpp"
