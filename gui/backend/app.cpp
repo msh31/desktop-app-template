@@ -51,7 +51,6 @@ void CApp::init( ) {
 }
 
 void CApp::render( ) {
-    ThemeManager::apply_colors( m_config.settings.dark_mode ? ThemeType::Dark : ThemeType::Light );
     m_ui_manager.render( );
 
     // rendered on top of the general UI

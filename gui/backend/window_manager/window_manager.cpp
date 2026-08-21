@@ -155,4 +155,5 @@ void CWindowManager::setup_imgui( ) {
     if ( !ImGui_ImplOpenGL3_Init( ) ) {
         throw std::runtime_error( "Failed to initialize ImGui" );
     }
+    ThemeManager::apply_colors( m_config.settings.dark_mode ? ThemeType::Dark : ThemeType::Light );
 }

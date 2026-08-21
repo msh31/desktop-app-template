@@ -4,6 +4,7 @@
  */
 
 #include "theme.hpp"
+#include <logger.hpp>
 
 void ThemeManager::apply_style( ) {
     style = ImGui::GetStyle( );
@@ -41,6 +42,10 @@ void ThemeManager::apply_scale( float scale ) {
 }
 
 void ThemeManager::apply_colors( ThemeType theme ) {
+    if ( has_applied && theme == current_theme ) return;
+    current_theme = theme;
+    has_applied = true;
+
     auto& colors = ImGui::GetStyle( ).Colors;
     switch ( theme ) {
     case ThemeType::Dark:
