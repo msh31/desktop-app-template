@@ -54,18 +54,18 @@ precompile-headers = ["lib/include/lib_pch.hpp"]
 [target.template_app]
 type = "executable"
 sources = [
-    "src/**.cpp",
+    "gui/**.cpp",
     "vendor/imgui/imgui_stdlib.cpp",
     "vendor/glad/**.c",
 ]
 include-directories = [
-    "src",
+    "gui",
     "vendor/imgui",
     "vendor/glad/include",
 ]
 compile-features = ["cxx_std_23"]
 link-libraries = ["template_lib", "imgui", "spdlog::spdlog"]
-precompile-headers = ["src/pch.hpp"]
+precompile-headers = ["gui/pch.hpp"]
 
 [target.template_tests]
 type = "executable"

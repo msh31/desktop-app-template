@@ -119,19 +119,19 @@ target_link_libraries(imgui PUBLIC
 # Target: template_lib
 set(template_lib_SOURCES
 	cmake.toml
-	"lib/include/backend/branding.hpp"
-	"lib/include/backend/cache.hpp"
-	"lib/include/backend/config/config.hpp"
-	"lib/include/backend/logger.hpp"
-	"lib/include/backend/paths.hpp"
-	"lib/include/backend/task_runner/task_runner.hpp"
-	"lib/include/backend/text_pipeline/text_pipeline.hpp"
-	"lib/include/backend/utils.hpp"
+	"lib/include/branding.hpp"
+	"lib/include/config/config.hpp"
 	"lib/include/lib_pch.hpp"
+	"lib/include/logger.hpp"
+	"lib/include/task_runner/task_runner.hpp"
+	"lib/include/text_pipeline/text_pipeline.hpp"
 	"lib/include/types.hpp"
-	"lib/src/backend/config/config.cpp"
-	"lib/src/backend/task_runner/task_runner.cpp"
-	"lib/src/backend/text_pipeline/text_pipeline.cpp"
+	"lib/include/utils/cache.hpp"
+	"lib/include/utils/paths.hpp"
+	"lib/include/utils/utils.hpp"
+	"lib/src/config/config.cpp"
+	"lib/src/task_runner/task_runner.cpp"
+	"lib/src/text_pipeline/text_pipeline.cpp"
 )
 
 add_library(template_lib STATIC)
@@ -159,26 +159,26 @@ target_precompile_headers(template_lib PUBLIC
 # Target: template_app
 set(template_app_SOURCES
 	cmake.toml
-	"src/backend/app.cpp"
-	"src/backend/font_manager/font_manager.cpp"
-	"src/backend/ui_manager/ui_manager.cpp"
-	"src/backend/window/window_manager.cpp"
-	"src/frontend/components/menubar/menubar.cpp"
-	"src/frontend/components/sidebar/sidebar.cpp"
-	"src/frontend/components/statusbar/statusbar.cpp"
-	"src/frontend/dialogs/confirm/confirm_dialog.cpp"
-	"src/frontend/layout/none/none.cpp"
-	"src/frontend/layout/ribbon/ribbon.cpp"
-	"src/frontend/layout/sidebar/sidebar.cpp"
-	"src/frontend/layout/tabbar/tabbar.cpp"
-	"src/frontend/notification/notification.cpp"
-	"src/frontend/theme/theme.cpp"
-	"src/frontend/views/cache_demo/cache_demo_view.cpp"
-	"src/frontend/views/debug/debug_view.cpp"
-	"src/frontend/views/home/home_view.cpp"
-	"src/frontend/views/pipeline/pipeline_demo.cpp"
-	"src/frontend/views/settings/settings_view.cpp"
-	"src/main.cpp"
+	"gui/backend/app.cpp"
+	"gui/backend/font_manager/font_manager.cpp"
+	"gui/backend/ui_manager/ui_manager.cpp"
+	"gui/backend/window_manager/window_manager.cpp"
+	"gui/frontend/components/menubar/menubar.cpp"
+	"gui/frontend/components/sidebar/sidebar.cpp"
+	"gui/frontend/components/statusbar/statusbar.cpp"
+	"gui/frontend/dialogs/confirm/confirm_dialog.cpp"
+	"gui/frontend/layout/none/none.cpp"
+	"gui/frontend/layout/ribbon/ribbon.cpp"
+	"gui/frontend/layout/sidebar/sidebar.cpp"
+	"gui/frontend/layout/tabbar/tabbar.cpp"
+	"gui/frontend/notification/notification.cpp"
+	"gui/frontend/theme/theme.cpp"
+	"gui/frontend/views/cache_demo/cache_demo_view.cpp"
+	"gui/frontend/views/debug/debug_view.cpp"
+	"gui/frontend/views/home/home_view.cpp"
+	"gui/frontend/views/pipeline/pipeline_demo.cpp"
+	"gui/frontend/views/settings/settings_view.cpp"
+	"gui/main.cpp"
 	"vendor/glad/src/gl.c"
 	"vendor/imgui/imgui_stdlib.cpp"
 )
@@ -193,7 +193,7 @@ target_compile_features(template_app PRIVATE
 )
 
 target_include_directories(template_app PRIVATE
-	src
+	gui
 	"vendor/imgui"
 	"vendor/glad/include"
 )
@@ -205,7 +205,7 @@ target_link_libraries(template_app PRIVATE
 )
 
 target_precompile_headers(template_app PRIVATE
-	"src/pch.hpp"
+	"gui/pch.hpp"
 )
 
 get_directory_property(CMKR_VS_STARTUP_PROJECT DIRECTORY ${PROJECT_SOURCE_DIR} DEFINITION VS_STARTUP_PROJECT)

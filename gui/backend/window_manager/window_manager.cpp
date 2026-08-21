@@ -1,0 +1,142 @@
+#include "window_manager.hpp"
+#include <branding.hpp>
+
+#include <frontend/fonts/font_registry.hpp>
+#include <frontend/theme/theme.hpp>
+
+#include <logger.hpp>
+
+namespace {
+    constexpr int kMinWindowW = 640;
+    constexpr int kMinWindowH = 480;
+    constexpr float kDefaultWindowFraction = 0.7f; // of the primary monitor's work area
+} // namespace
+
+bool CWindowManager::should_continue( ) {
+    bool window_open = glfwWindowShouldClose( m_window ) == 0;
+#ifndef NDEBUG
+    bool q_pressed = glfwGetKey( m_window, GLFW_KEY_Q ) == GLFW_PRESS;
+    return window_open && !q_pressed;
+#else
+    return window_open;
+#endif
+}
+
+void CWindowManager::run( std::function<void( )> fun ) {
+    do {
+        glClear( GL_COLOR_BUFFER_BIT );
+
+        ImGui_ImplOpenGL3_NewFrame( );
+        ImGui_ImplGlfw_NewFrame( );
+        ImGui::NewFrame( );
+
+        ImGuiViewport* viewport = ImGui::GetMainViewport( );
+        ImGui::SetNextWindowPos( viewport->Pos );
+        ImGui::SetNextWindowSize( viewport->Size );
+        // ImGui::SetNextWindowViewport(viewport->ID);
+
+        ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
+                                        ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse |
+                                        ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus |
+                                        ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
+
+        ImGui::Begin( "Main Window", nullptr, window_flags );
+        fun( );
+        ImGui::End( );
+        ImGui::Render( );
+
+        ImGui_ImplOpenGL3_RenderDrawData( ImGui::GetDrawData( ) );
+        glfwSwapBuffers( m_window );
+        glfwWaitEventsTimeout( 1.0 / 60.0 );
+    } while ( should_continue( ) );
+
+    remember_window_size( );
+}
+
+static void error_callback( int error, const char* description ) {
+    auto str = std::format( "A fatal error occured: {}", description );
+    throw std::runtime_error( str.c_str( ) );
+}
+
+void CWindowManager::setup_opengl( ) {
+    SPDLOG_INFO( "Setting up OpenGL.." );
+    glfwSetErrorCallback( error_callback );
+    if ( !glfwInit( ) ) {
+        throw std::runtime_error( "Failed to initialize GLFW" );
+    }
+
+    // glfwWindowHint( GLFW_SAMPLES, 4 ); // 4x antialiasing (MSAA)
+    glfwWindowHint( GLFW_CONTEXT_VERSION_MAJOR, 3 );
+    glfwWindowHint( GLFW_CONTEXT_VERSION_MINOR, 3 );
+    glfwWindowHint( GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE ); // no old OpenGL
+
+    int width = m_config.settings.window_w;
+    int height = m_config.settings.window_h;
+    if ( width <= 0 || height <= 0 ) {
+        // no persisted size yet - derive a sane default from the primary monitor instead of a hardcoded resolution
+        width = kMinWindowW;
+        height = kMinWindowH;
+        if ( GLFWmonitor* monitor = glfwGetPrimaryMonitor( ) ) {
+            int mon_x, mon_y, mon_w, mon_h;
+            glfwGetMonitorWorkarea( monitor, &mon_x, &mon_y, &mon_w, &mon_h );
+            width = std::max( kMinWindowW, static_cast<int>( mon_w * kDefaultWindowFraction ) );
+            height = std::max( kMinWindowH, static_cast<int>( mon_h * kDefaultWindowFraction ) );
+        }
+    }
+
+    m_window = glfwCreateWindow( width, height, APP_NAME.data( ), nullptr, nullptr );
+    if ( m_window == nullptr ) {
+        glfwTerminate( );
+    }
+
+    glfwSetWindowSizeLimits( m_window, kMinWindowW, kMinWindowH, GLFW_DONT_CARE, GLFW_DONT_CARE );
+    glfwMakeContextCurrent( m_window );
+    glfwSwapInterval( 1 );
+    if ( !gladLoadGL( glfwGetProcAddress ) ) {
+        throw std::runtime_error( "Failed to initialize GLAD!" );
+    }
+
+    // glEnable( GL_MULTISAMPLE ); // enable MSAA...
+}
+
+void CWindowManager::remember_window_size( ) {
+    int w = 0, h = 0;
+    glfwGetWindowSize( m_window, &w, &h );
+    m_config.settings.window_w = w;
+    m_config.settings.window_h = h;
+}
+
+void CWindowManager::apply_content_scale( float scale ) {
+    m_content_scale = scale;
+    ThemeManager::apply_scale( scale );
+    ImGui::GetStyle( ).FontScaleDpi = scale;
+}
+
+void CWindowManager::setup_imgui( ) {
+    SPDLOG_INFO( "Setting up ImGui.." );
+    ImGui::CreateContext( );
+
+    ImGuiIO& io = ImGui::GetIO( );
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+    io.IniFilename = nullptr; // no imgui.ini
+    io.LogFilename = nullptr; // no imgui log pls
+
+    ThemeManager::apply_style( );
+    CFontManager::get( ).load_all( font_registry( ) );
+
+    glfwSetWindowUserPointer( m_window, this );
+    glfwSetWindowContentScaleCallback( m_window, []( GLFWwindow* window, float xscale, float ) {
+        static_cast<CWindowManager*>( glfwGetWindowUserPointer( window ) )->apply_content_scale( xscale );
+    } );
+
+    float xscale = 1.0f, yscale = 1.0f;
+    glfwGetWindowContentScale( m_window, &xscale, &yscale );
+    apply_content_scale( xscale );
+
+    if ( !ImGui_ImplGlfw_InitForOpenGL( m_window, true ) ) {
+        throw std::runtime_error( "Failed to initialize ImGui for OpenGL" );
+    }
+    if ( !ImGui_ImplOpenGL3_Init( ) ) {
+        throw std::runtime_error( "Failed to initialize ImGui" );
+    }
+}
