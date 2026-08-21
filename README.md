@@ -10,7 +10,7 @@ This is a simple template to create desktop applications using C++23, ImGui & Op
 ## Usage
 ### Requirements
 - CMake 3.31 or later
-- A C++23 capable compiler like: GCC13, (Apple)CLang16 & MSVC 2022.17.7 or later
+- A C++23 capable compiler like: GCC14+, (Apple)CLang16 & MSVC 2022.17.7 or later
 
 After creating a repository based off this template you can simply run the following commands to setup and run the example:
 ```bash
