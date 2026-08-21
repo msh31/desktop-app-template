@@ -1,9 +1,11 @@
 #include "debug_view.hpp"
+
 #include <frontend/dialogs/confirm/confirm_dialog.hpp>
 #include <frontend/notification/notification.hpp>
+#include <frontend/theme/theme.hpp>
 
 void CDebugView::render( ) {
-    m_task_runner.update( ); // needs a refactor but fine for now
+    m_task_runner.update( ); // needs a refactor but fine for now | TODO: copy from SM
 
     if ( ImGui::Button( "Click Me" ) ) {
         Notify::show_notification( "", "Click Me button has been clicked!", 2000 );
@@ -28,6 +30,18 @@ void CDebugView::render( ) {
             [] { std::this_thread::sleep_for( std::chrono::seconds( 2 ) ); },
             [] { Notify::show_notification( "Async", "Task complete!", 2000 ); },
             []( const std::exception& ex ) { Notify::show_notification( "Error", ex.what( ), 5000 ); } );
+    }
+
+    if ( ImGui::Button( "Set scale to 2.0x" ) ) {
+        ThemeManager::apply_scale( 2.0f );
+    }
+    ImGui::SameLine( );
+    if ( ImGui::Button( "Set scale to 1.5x" ) ) {
+        ThemeManager::apply_scale( 1.5f );
+    }
+    ImGui::SameLine( );
+    if ( ImGui::Button( "reset scale" ) ) {
+        ThemeManager::apply_scale( 1.0f );
     }
 }
 
