@@ -39,7 +39,7 @@ void CUIManager::set_statusbar( CStatusBar statusbar ) { m_statusbar = std::move
 void CUIManager::render( ) {
     if ( m_menubar ) m_menubar->render( );
 
-    float sb_h = m_statusbar ? CStatusBar::height( ) : 0.f;
+    float sb_h = m_statusbar ? CStatusBar::height( ) + ImGui::GetStyle( ).ItemSpacing.y : 0.f;
     ImGui::BeginChild(
         "##shell_area", { 0.f, -sb_h }, ImGuiChildFlags_None,
         ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse );
