@@ -1,3 +1,4 @@
+*.vs/
 *.ini
 .cache/
 .DS_Store
