@@ -1,5 +1,6 @@
 #pragma once
 #include <backend/branding.hpp>
+
 namespace fs = std::filesystem;
 
 namespace paths {

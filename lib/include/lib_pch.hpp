@@ -27,8 +27,17 @@
 namespace fs = std::filesystem;
 #endif
 
+//TODO: undo this mess
 #ifdef __linux__
     #include <sys/types.h>
     #include <sys/wait.h>
     #include <unistd.h>
+#endif
+
+#ifdef _WIN32
+#define WIN32_LEAN_AND_MEAN
+#define NOMINMAX
+#include <Windows.h>
+#include <Psapi.h>
+#include <ShlObj_core.h>
 #endif
