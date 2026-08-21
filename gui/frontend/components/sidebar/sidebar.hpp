@@ -10,7 +10,7 @@ class CSideBar {
         bool collapsed = true;
 
     private:
-        bool nav_button( const char* icon, const char* label, bool active, float width );
+        bool nav_button( const char* icon, const char* label, bool active, ImVec2 width );
 
         std::vector<CBaseView::ViewItem> m_items;
         CBaseView* m_settings;

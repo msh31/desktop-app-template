@@ -4,7 +4,7 @@
 #include <frontend/icons.hpp>
 
 CBaseView* CSideBar::render( CBaseView* active ) {
-    float width = collapsed ? 50.0f : 300.f;
+    float width = collapsed ? 60.0f : 275.f;
 
     ImGui::BeginChild( "##sidebar", { width, 0 }, ImGuiChildFlags_Borders );
     float content_w = ImGui::GetContentRegionAvail( ).x;
@@ -21,8 +21,6 @@ CBaseView* CSideBar::render( CBaseView* active ) {
         ImGui::PushFont( CFontManager::get( ).get_font( "jbm_reg_xl" ).value_or( nullptr ) );
         ImGui::TextDisabled( "%s", APP_NAME.data( ) );
         ImGui::PopFont( );
-        ImGui::Separator( );
-        ImGui::Spacing( );
     }
 
     if ( collapsed ) {
@@ -33,20 +31,26 @@ CBaseView* CSideBar::render( CBaseView* active ) {
         ImGui::PopID( );
     }
 
+    ImGui::Separator( );
+    ImGui::Spacing( );
+
     for ( const auto& item : m_items ) {
         auto label = item.label;
         if ( collapsed ) label = "";
-        if ( nav_button( item.icon, label, item.view == active, content_w ) ) {
+        if ( nav_button( item.icon, label, item.view == active, ImVec2(content_w, 0 )) ) {
             r_item = item.view;
             break;
         }
+        if ( collapsed ) ImGui::SetItemTooltip( item.label );
     }
 
-    // there is an odd issue where it is not aligned properly if collapsed, cba rn TODO
+    auto avail = ImGui::GetContentRegionAvail();
+    ImGui::Dummy( ImVec2( avail.x, avail.y - 40.0f ) );
+
     ImGui::PushStyleVar( ImGuiStyleVar_ButtonTextAlign, ImVec2( 0.0f, 0.5f ) );
-    std::string spacing = "  ";
-    if ( collapsed ) spacing = "";
-    if ( ImGui::Button( std::format( "{}{} Settings", spacing, ICON_GEAR ).c_str( ), ImVec2( content_w, 0 ) ) ) {
+    std::string str = std::format( "{}{}", ICON_GEAR, " Settings" );
+    if ( collapsed ) str = std::string(ICON_GEAR);
+    if ( ImGui::Button( str.c_str( ), ImVec2( content_w, 0 ) ) ) {
         r_item = m_settings;
     }
     ImGui::PopStyleVar( );
@@ -59,7 +63,7 @@ void CSideBar::add_item( CBaseView::ViewItem item ) { m_items.push_back( item );
 
 void CSideBar::set_settings_view( CBaseView* view ) { m_settings = view; }
 
-bool CSideBar::nav_button( const char* icon, const char* label, bool active, float width ) {
+bool CSideBar::nav_button( const char* icon, const char* label, bool active, ImVec2 width ) {
     ImGuiStyle& style = ImGui::GetStyle( );
 
     if ( active ) {
@@ -69,10 +73,9 @@ bool CSideBar::nav_button( const char* icon, const char* label, bool active, flo
     }
     ImGui::PushStyleVar( ImGuiStyleVar_ButtonTextAlign, ImVec2( 0.0f, 0.5f ) );
 
-    std::string spacing = "  ";
-    if ( collapsed ) spacing = "";
-    std::string text = std::format( "{}{}   {}##nav_{}", spacing, icon, label, label );
-    bool clicked = ImGui::Button( text.c_str( ), ImVec2( width, 0 ) );
+    std::string str = std::format("{} {}", icon, label);
+    if ( collapsed ) str = icon;
+    bool clicked = ImGui::Button( str.c_str(), width );
 
     ImGui::PopStyleVar( );
     if ( active ) ImGui::PopStyleColor( 3 );
