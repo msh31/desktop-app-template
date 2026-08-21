@@ -22,25 +22,25 @@ void CApp::init( ) {
     m_ui_manager.add_view( { std::make_unique<CCacheDemoView>( ), ICON_CACHE, "Cache Demo" } );
     m_ui_manager.set_settings_view( { std::make_unique<CSettingsView>( m_config ), ICON_GEAR, "Settings" } );
 
-    SPDLOG_INFO( "Setting up the menubar.." );
-    m_menubar.add_group(
-        { "File",
-          {
-              { ICON_NEW_FILE, "New", [] { Notify::show_notification( "File", "New", 1500 ); } },
-              { ICON_OPEN, "Open", [] { Notify::show_notification( "File", "Open", 1500 ); } },
-              { ICON_SAVE, "Save", [] { Notify::show_notification( "File", "Saved!", 1500 ); } },
-          } } );
-    m_menubar.add_group(
-        { "Options",
-          {
-              { ICON_THEME, "Dark Mode", nullptr, &m_config.settings.dark_mode },
-              { ICON_TEST, "Feature A", nullptr, &m_toggle_a },
-              { ICON_TEST2, "Feature B", nullptr, &m_toggle_b },
-              { ICON_TEST3, "Feature C", nullptr, &m_toggle_c },
-              { ICON_TEST4, "Feature D", nullptr, &m_toggle_d },
-              { ICON_TEST5, "Feature E", nullptr, &m_toggle_e },
-          } } );
-    m_ui_manager.set_menubar( std::move( m_menubar ) );
+    //SPDLOG_INFO( "Setting up the menubar.." );
+    //m_menubar.add_group(
+    //    { "File",
+    //      {
+    //          { ICON_NEW_FILE, "New", [] { Notify::show_notification( "File", "New", 1500 ); } },
+    //          { ICON_OPEN, "Open", [] { Notify::show_notification( "File", "Open", 1500 ); } },
+    //          { ICON_SAVE, "Save", [] { Notify::show_notification( "File", "Saved!", 1500 ); } },
+    //      } } );
+    //m_menubar.add_group(
+    //    { "Options",
+    //      {
+    //          { ICON_THEME, "Dark Mode", nullptr, &m_config.settings.dark_mode },
+    //          { ICON_TEST, "Feature A", nullptr, &m_toggle_a },
+    //          { ICON_TEST2, "Feature B", nullptr, &m_toggle_b },
+    //          { ICON_TEST3, "Feature C", nullptr, &m_toggle_c },
+    //          { ICON_TEST4, "Feature D", nullptr, &m_toggle_d },
+    //          { ICON_TEST5, "Feature E", nullptr, &m_toggle_e },
+    //      } } );
+    //m_ui_manager.set_menubar( std::move( m_menubar ) );
 
     SPDLOG_INFO( "Setting up statusbar.." );
     m_statusbar.add_left( { "I am a statusbar", "X" } );
