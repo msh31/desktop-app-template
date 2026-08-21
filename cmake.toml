@@ -10,6 +10,7 @@ languages = ["C", "CXX"]
 
 [variables]
 CMAKE_EXPORT_COMPILE_COMMANDS = true
+BUILD_GMOCK = false
 
 # dependencies
 [fetch-content.glfw]
@@ -38,12 +39,13 @@ sources = [
     "${imgui_SOURCE_DIR}/backends/imgui_impl_glfw.cpp",
     "${imgui_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp"
 ]
+link-libraries = ["glfw"]
 include-directories = ["${imgui_SOURCE_DIR}", "${imgui_SOURCE_DIR}/backends"]
 compile-features = ["cxx_std_23"]
 
 [target.template_lib]
 type = "static"
-sources = ["lib/src/**.cpp"]
+sources = ["lib/src/**.cpp", "lib/include/**.hpp"]
 include-directories = ["lib/include"]
 compile-features = ["cxx_std_23"]
 link-libraries = ["nlohmann_json::nlohmann_json", "spdlog::spdlog"]
@@ -62,7 +64,7 @@ include-directories = [
     "vendor/glad/include",
 ]
 compile-features = ["cxx_std_23"]
-link-libraries = ["template_lib", "glfw", "imgui", "spdlog::spdlog"]
+link-libraries = ["template_lib", "imgui", "spdlog::spdlog"]
 precompile-headers = ["src/pch.hpp"]
 
 [target.template_tests]

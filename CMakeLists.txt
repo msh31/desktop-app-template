@@ -26,6 +26,7 @@ endif()
 
 # Variables
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(BUILD_GMOCK OFF)
 
 project("Desktop App Template"
 	LANGUAGES
@@ -111,9 +112,23 @@ target_include_directories(imgui PUBLIC
 	"${imgui_SOURCE_DIR}/backends"
 )
 
+target_link_libraries(imgui PUBLIC
+	glfw
+)
+
 # Target: template_lib
 set(template_lib_SOURCES
 	cmake.toml
+	"lib/include/backend/branding.hpp"
+	"lib/include/backend/cache.hpp"
+	"lib/include/backend/config/config.hpp"
+	"lib/include/backend/logger.hpp"
+	"lib/include/backend/paths.hpp"
+	"lib/include/backend/task_runner/task_runner.hpp"
+	"lib/include/backend/text_pipeline/text_pipeline.hpp"
+	"lib/include/backend/utils.hpp"
+	"lib/include/lib_pch.hpp"
+	"lib/include/types.hpp"
 	"lib/src/backend/config/config.cpp"
 	"lib/src/backend/task_runner/task_runner.cpp"
 	"lib/src/backend/text_pipeline/text_pipeline.cpp"
@@ -185,7 +200,6 @@ target_include_directories(template_app PRIVATE
 
 target_link_libraries(template_app PRIVATE
 	template_lib
-	glfw
 	imgui
 	spdlog::spdlog
 )
