@@ -6,6 +6,16 @@
 
 #include <logger.hpp>
 
+#if defined( _WIN32 )
+    #define GLFW_EXPOSE_NATIVE_WIN32
+    #include <GLFW/glfw3native.h>
+    #include <dwmapi.h>
+
+    #ifndef DWMWA_USE_IMMERSIVE_DARK_MODE
+        #define DWMWA_USE_IMMERSIVE_DARK_MODE 20
+    #endif
+#endif
+
 namespace {
     constexpr int kMinWindowW = 640;
     constexpr int kMinWindowH = 480;
@@ -88,6 +98,12 @@ void CWindowManager::setup_opengl( ) {
     if ( m_window == nullptr ) {
         glfwTerminate( );
     }
+
+    #if defined( _WIN32 )
+    BOOL dark_mode = m_config.settings.dark_mode;
+    DwmSetWindowAttribute(
+        glfwGetWin32Window( m_window ), DWMWA_USE_IMMERSIVE_DARK_MODE, &dark_mode, sizeof( dark_mode ) );
+    #endif
 
     glfwSetWindowSizeLimits( m_window, kMinWindowW, kMinWindowH, GLFW_DONT_CARE, GLFW_DONT_CARE );
     glfwMakeContextCurrent( m_window );

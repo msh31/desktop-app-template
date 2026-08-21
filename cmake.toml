@@ -67,6 +67,9 @@ compile-features = ["cxx_std_23"]
 link-libraries = ["template_lib", "imgui", "spdlog::spdlog"]
 precompile-headers = ["gui/pch.hpp"]
 
+[target.template_app.windows]
+link-libraries = ["Dwmapi"]
+
 [target.template_tests]
 type = "executable"
 sources = ["tests/**.cpp"]

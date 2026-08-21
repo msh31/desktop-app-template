@@ -204,6 +204,12 @@ target_link_libraries(template_app PRIVATE
 	spdlog::spdlog
 )
 
+if(WIN32) # windows
+	target_link_libraries(template_app PRIVATE
+		Dwmapi
+	)
+endif()
+
 target_precompile_headers(template_app PRIVATE
 	"gui/pch.hpp"
 )
