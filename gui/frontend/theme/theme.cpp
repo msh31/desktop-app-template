@@ -55,6 +55,7 @@ void ThemeManager::apply_colors( ThemeType theme ) {
         colors[ImGuiCol_FrameBg] = ImVec4( 0.13f, 0.13f, 0.13f, 1.00f );
         colors[ImGuiCol_FrameBgHovered] = ImVec4( 0.17f, 0.17f, 0.17f, 1.00f );
         colors[ImGuiCol_FrameBgActive] = ImVec4( 0.21f, 0.21f, 0.21f, 1.00f );
+        colors[ImGuiCol_CheckboxSelectedBg] = ImVec4( 0.86f, 0.08f, 0.24f, 0.25f );
         colors[ImGuiCol_TitleBg] = ImVec4( 0.06f, 0.06f, 0.06f, 1.00f );
         colors[ImGuiCol_TitleBgActive] = ImVec4( 0.09f, 0.09f, 0.09f, 1.00f );
         colors[ImGuiCol_TitleBgCollapsed] = ImVec4( 0.00f, 0.00f, 0.00f, 0.51f );
@@ -106,6 +107,7 @@ void ThemeManager::apply_colors( ThemeType theme ) {
         colors[ImGuiCol_FrameBg] = ImVec4( 0.93f, 0.93f, 0.93f, 1.00f );
         colors[ImGuiCol_FrameBgHovered] = ImVec4( 0.89f, 0.89f, 0.89f, 1.00f );
         colors[ImGuiCol_FrameBgActive] = ImVec4( 0.85f, 0.85f, 0.85f, 1.00f );
+        colors[ImGuiCol_CheckboxSelectedBg] = ImVec4( 0.86f, 0.08f, 0.24f, 0.15f );
         colors[ImGuiCol_TitleBg] = ImVec4( 0.96f, 0.96f, 0.96f, 1.00f );
         colors[ImGuiCol_TitleBgActive] = ImVec4( 0.93f, 0.93f, 0.93f, 1.00f );
         colors[ImGuiCol_TitleBgCollapsed] = ImVec4( 0.85f, 0.85f, 0.85f, 0.51f );
