@@ -27,10 +27,12 @@ class CWindowManager {
         CConfig& m_config;
         GLFWwindow* m_window = nullptr;
         float m_content_scale = 1.0f;
+        std::function<void( )> m_render_fn;
 
         void setup_opengl( );
         void setup_imgui( );
         void apply_content_scale( float scale );
         bool should_continue( );
         void remember_window_size( );
+        void render_frame( );
 };

@@ -33,34 +33,40 @@ bool CWindowManager::should_continue( ) {
 }
 
 void CWindowManager::run( std::function<void( )> fun ) {
+    m_render_fn = fun;
+
     do {
-        glClear( GL_COLOR_BUFFER_BIT );
-
-        ImGui_ImplOpenGL3_NewFrame( );
-        ImGui_ImplGlfw_NewFrame( );
-        ImGui::NewFrame( );
-
-        ImGuiViewport* viewport = ImGui::GetMainViewport( );
-        ImGui::SetNextWindowPos( viewport->Pos );
-        ImGui::SetNextWindowSize( viewport->Size );
-        // ImGui::SetNextWindowViewport(viewport->ID);
-
-        ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
-                                        ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse |
-                                        ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus |
-                                        ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
-
-        ImGui::Begin( "Main Window", nullptr, window_flags );
-        fun( );
-        ImGui::End( );
-        ImGui::Render( );
-
-        ImGui_ImplOpenGL3_RenderDrawData( ImGui::GetDrawData( ) );
-        glfwSwapBuffers( m_window );
+        render_frame( );
         glfwWaitEventsTimeout( 1.0 / 60.0 );
     } while ( should_continue( ) );
 
     remember_window_size( );
+}
+
+void CWindowManager::render_frame( ) {
+    glClear( GL_COLOR_BUFFER_BIT );
+
+    ImGui_ImplOpenGL3_NewFrame( );
+    ImGui_ImplGlfw_NewFrame( );
+    ImGui::NewFrame( );
+
+    ImGuiViewport* viewport = ImGui::GetMainViewport( );
+    ImGui::SetNextWindowPos( viewport->Pos );
+    ImGui::SetNextWindowSize( viewport->Size );
+    // ImGui::SetNextWindowViewport(viewport->ID);
+
+    ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
+                                    ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBringToFrontOnFocus |
+                                    ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_NoScrollbar |
+                                    ImGuiWindowFlags_NoScrollWithMouse;
+
+    ImGui::Begin( "Main Window", nullptr, window_flags );
+    m_render_fn( );
+    ImGui::End( );
+    ImGui::Render( );
+
+    ImGui_ImplOpenGL3_RenderDrawData( ImGui::GetDrawData( ) );
+    glfwSwapBuffers( m_window );
 }
 
 static void error_callback( int error, const char* description ) {
@@ -143,6 +149,10 @@ void CWindowManager::setup_imgui( ) {
     glfwSetWindowUserPointer( m_window, this );
     glfwSetWindowContentScaleCallback( m_window, []( GLFWwindow* window, float xscale, float ) {
         static_cast<CWindowManager*>( glfwGetWindowUserPointer( window ) )->apply_content_scale( xscale );
+    } );
+
+    glfwSetWindowRefreshCallback( m_window, []( GLFWwindow* window ) {
+        static_cast<CWindowManager*>( glfwGetWindowUserPointer( window ) )->render_frame( ); 
     } );
 
     float xscale = 1.0f, yscale = 1.0f;
