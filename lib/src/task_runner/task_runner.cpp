@@ -1,12 +1,5 @@
 #include <task_runner/task_runner.hpp>
 
-void CTaskRunner::run(
-    std::function<void( )> work, std::function<void( )> on_complete,
-    std::function<void( const std::exception& )> on_error ) {
-    m_tasks.emplace_back(
-        Task{ std::async( std::launch::async, work ), std::move( on_complete ), std::move( on_error ) } );
-}
-
 void CTaskRunner::update( ) {
     std::erase_if( m_tasks, []( Task& t ) {
         bool ready = false;

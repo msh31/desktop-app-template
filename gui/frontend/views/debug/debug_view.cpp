@@ -32,9 +32,12 @@ void CDebugView::render( ) {
         }
 
         if ( ImGui::Button( "Test async task" ) ) {
-            m_task_runner.run(
-                [] { std::this_thread::sleep_for( std::chrono::seconds( 2 ) ); },
-                [] { Notify::show_notification( "Async", "Task complete!", 2000 ); },
+            m_task_runner.run<int>(
+                [] {
+                    std::this_thread::sleep_for( std::chrono::seconds( 2 ) );
+                    return 0;
+                },
+                []( int ) { Notify::show_notification( "Async", "Task complete!", 2000 ); },
                 []( const std::exception& ex ) { Notify::show_notification( "Error", ex.what( ), 5000 ); } );
         }
     }

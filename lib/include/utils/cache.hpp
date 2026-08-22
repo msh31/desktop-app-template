@@ -10,12 +10,11 @@ template <typename T> class CCache {
             if ( m_is_refreshing ) return;
 
             m_is_refreshing = true;
-            std::shared_ptr<T> slot = std::make_shared<T>( );
 
-            m_taskrunner.run(
-                [this, slot, fun] { *slot = fun( ); },
-                [this, slot] {
-                    m_current_snapshot = *slot;
+            m_taskrunner.run<T>(
+                fun,
+                [this](T val) {
+                    m_current_snapshot = val;
                     m_is_refreshing = false;
                 },
                 []( const std::exception& ex ) { SPDLOG_ERROR( "Cache Refresh Error: {}", ex.what( ) ); } );
