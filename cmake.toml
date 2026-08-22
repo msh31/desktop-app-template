@@ -55,6 +55,7 @@ precompile-headers = ["lib/include/lib_pch.hpp"]
 type = "executable"
 sources = [
     "gui/**.cpp",
+    "gui/**.hpp",
     "vendor/imgui/imgui_stdlib.cpp",
     "vendor/glad/**.c",
 ]
