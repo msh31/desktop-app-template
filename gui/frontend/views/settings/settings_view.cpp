@@ -62,7 +62,7 @@ void CSettingsView::render( ) {
         ImGui::Text( "Configuration" );
 
         if ( ImGui::Button( "Open" ) ) {
-            open_in_file_manager( paths::config_dir( ).string( ).c_str( ) );
+            utils::open_in_file_manager( paths::config_dir( ).string( ).c_str( ) );
         }
         ImGui::SetItemTooltip( "Opens your file manager to the config directory." );
 

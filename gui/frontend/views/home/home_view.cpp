@@ -3,7 +3,7 @@
 #include <frontend/notification/notification.hpp>
 
 void CHomeView::on_enter( ) {
-    Notify::show_notification( "Introduction", std::format( "Hello: {}", get_username( ).c_str( ) ), 1500 );
+    Notify::show_notification( "Introduction", std::format( "Hello: {}", utils::get_username( ).c_str( ) ), 1500 );
 }
 
 void CHomeView::render( ) {
@@ -70,7 +70,7 @@ void CHomeView::render( ) {
 }
 
 void CHomeView::on_exit( ) {
-    Notify::show_notification( "Departure", std::format( "Goodbye: {}", get_username( ).c_str( ) ), 1500 );
+    Notify::show_notification( "Departure", std::format( "Goodbye: {}", utils::get_username( ).c_str( ) ), 1500 );
 }
 
 CHomeView::~CHomeView( ) {}
