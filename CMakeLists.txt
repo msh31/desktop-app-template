@@ -36,6 +36,13 @@ project("Desktop App Template"
 		"A C++ template for building cross-platform desktop apps with ImGui and OpenGL"
 )
 
+if(APPLE) # apple
+	enable_language(
+		OBJC
+	)
+
+endif()
+
 include(FetchContent)
 
 # Fix warnings about DOWNLOAD_EXTRACT_TIMESTAMP

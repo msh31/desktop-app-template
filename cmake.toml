@@ -7,6 +7,7 @@ cmkr-include = "cmkr.cmake"
 name = "Desktop App Template"
 description = "A C++ template for building cross-platform desktop apps with ImGui and OpenGL"
 languages = ["C", "CXX"]
+apple.languages = ["OBJC"]
 
 [variables]
 CMAKE_EXPORT_COMPILE_COMMANDS = true
