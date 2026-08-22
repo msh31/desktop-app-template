@@ -87,6 +87,15 @@ FetchContent_Declare(gtest
 )
 FetchContent_MakeAvailable(gtest)
 
+message(STATUS "Fetching nfd (v1.3.0)...")
+FetchContent_Declare(nfd
+	GIT_REPOSITORY
+		"https://github.com/btzy/nativefiledialog-extended"
+	GIT_TAG
+		v1.3.0
+)
+FetchContent_MakeAvailable(nfd)
+
 # Target: imgui
 set(imgui_SOURCES
 	"${imgui_SOURCE_DIR}/backends/imgui_impl_glfw.cpp"
@@ -241,6 +250,7 @@ target_link_libraries(template_app PRIVATE
 	template_lib
 	imgui
 	spdlog::spdlog
+	nfd
 )
 
 if(WIN32) # windows

@@ -28,6 +28,9 @@ tag = "v1.17.0"
 [fetch-content.gtest]
 git = "https://github.com/google/googletest"
 tag = "v1.18.0"
+[fetch-content.nfd]
+git = "https://github.com/btzy/nativefiledialog-extended"
+tag = "v1.3.0"
 
 [target.imgui]
 type = "static"
@@ -66,7 +69,7 @@ include-directories = [
     "vendor/stb"
 ]
 compile-features = ["cxx_std_23"]
-link-libraries = ["template_lib", "imgui", "spdlog::spdlog"]
+link-libraries = ["template_lib", "imgui", "spdlog::spdlog", "nfd"]
 precompile-headers = ["gui/pch.hpp"]
 
 [target.template_app.windows]
