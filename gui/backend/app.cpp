@@ -60,15 +60,16 @@ void CApp::init( ) {
 }
 
 void CApp::render( ) {
-    if ( m_config.settings.use_bg ) {
-        ImGui::GetBackgroundDrawList( )->AddImage((ImTextureID)m_background_image.texture_id, ImVec2( 0, 0 ), ImGui::GetIO( ).DisplaySize );
-    }
+    bool use_bg = m_config.settings.use_bg;
 
-    if ( m_config.settings.use_bg ) {
+    if ( use_bg ) {
+        ImGui::GetBackgroundDrawList( )->AddImage((ImTextureID)m_background_image.texture_id, ImVec2( 0, 0 ), ImGui::GetIO( ).DisplaySize );
         ImGui::PushStyleColor( ImGuiCol_ChildBg, ImVec4( 0, 0, 0, 0 ) );
     }
+
     m_ui_manager.render( );
-    if ( m_config.settings.use_bg ) {
+
+    if ( use_bg ) {
         ImGui::PopStyleColor( );
     }
 
