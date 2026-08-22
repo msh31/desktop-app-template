@@ -63,6 +63,7 @@ include-directories = [
     "gui",
     "vendor/imgui",
     "vendor/glad/include",
+    "vendor/stb"
 ]
 compile-features = ["cxx_std_23"]
 link-libraries = ["template_lib", "imgui", "spdlog::spdlog"]

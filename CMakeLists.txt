@@ -163,10 +163,13 @@ set(template_app_SOURCES
 	"gui/backend/app.hpp"
 	"gui/backend/font_manager/font_manager.cpp"
 	"gui/backend/font_manager/font_manager.hpp"
+	"gui/backend/image_manager/image_manager.cpp"
+	"gui/backend/image_manager/image_manager.hpp"
 	"gui/backend/ui_manager/ui_manager.cpp"
 	"gui/backend/ui_manager/ui_manager.hpp"
 	"gui/backend/window_manager/window_manager.cpp"
 	"gui/backend/window_manager/window_manager.hpp"
+	"gui/frontend/childguard.hpp"
 	"gui/frontend/components/menubar/menubar.cpp"
 	"gui/frontend/components/menubar/menubar.hpp"
 	"gui/frontend/components/sidebar/sidebar.cpp"
@@ -182,6 +185,7 @@ set(template_app_SOURCES
 	"gui/frontend/fonts/inter.hpp"
 	"gui/frontend/fonts/inter_med.hpp"
 	"gui/frontend/icons.hpp"
+	"gui/frontend/images/pepe.hpp"
 	"gui/frontend/layout/none/none.cpp"
 	"gui/frontend/layout/none/none.hpp"
 	"gui/frontend/layout/ribbon/ribbon.cpp"
@@ -203,6 +207,8 @@ set(template_app_SOURCES
 	"gui/frontend/views/debug/debug_view.hpp"
 	"gui/frontend/views/home/home_view.cpp"
 	"gui/frontend/views/home/home_view.hpp"
+	"gui/frontend/views/image_demo/image_demo_view.cpp"
+	"gui/frontend/views/image_demo/image_demo_view.hpp"
 	"gui/frontend/views/log/log_view.cpp"
 	"gui/frontend/views/log/log_view.hpp"
 	"gui/frontend/views/pipeline/pipeline_demo.cpp"
@@ -228,6 +234,7 @@ target_include_directories(template_app PRIVATE
 	gui
 	"vendor/imgui"
 	"vendor/glad/include"
+	"vendor/stb"
 )
 
 target_link_libraries(template_app PRIVATE

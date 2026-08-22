@@ -81,10 +81,10 @@ void CWindowManager::setup_opengl( ) {
         throw std::runtime_error( "Failed to initialize GLFW" );
     }
 
-    // glfwWindowHint( GLFW_SAMPLES, 4 ); // 4x antialiasing (MSAA)
+    //OpenGL 3.3 Core
     glfwWindowHint( GLFW_CONTEXT_VERSION_MAJOR, 3 );
     glfwWindowHint( GLFW_CONTEXT_VERSION_MINOR, 3 );
-    glfwWindowHint( GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE ); // no old OpenGL
+    glfwWindowHint( GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE );
 
     int width = m_config.settings.window_w;
     int height = m_config.settings.window_h;
@@ -113,12 +113,10 @@ void CWindowManager::setup_opengl( ) {
 
     glfwSetWindowSizeLimits( m_window, kMinWindowW, kMinWindowH, GLFW_DONT_CARE, GLFW_DONT_CARE );
     glfwMakeContextCurrent( m_window );
-    glfwSwapInterval( 1 );
+    glfwSwapInterval( 1 ); //vsync
     if ( !gladLoadGL( glfwGetProcAddress ) ) {
         throw std::runtime_error( "Failed to initialize GLAD!" );
     }
-
-    // glEnable( GL_MULTISAMPLE ); // enable MSAA...
 }
 
 void CWindowManager::remember_window_size( ) {
