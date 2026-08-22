@@ -17,6 +17,13 @@
 #include <frontend/notification/notification.hpp>
 
 void CApp::init( ) {
+    if ( m_config.settings.use_bg && !m_config.settings.bg_name.empty( ) ) {
+        auto path = paths::backgrounds_dir( ) / m_config.settings.bg_name;
+        if ( fs::exists( path ) ) {
+            m_background_image = CImageManager::get( ).load_from_disk( path, "background" );
+        }
+    }
+
     SPDLOG_INFO( "Setting up application views.." );
     m_ui_manager.add_view( { std::make_unique<CHomeView>( ), ICON_HOME, "Home" } );
     m_ui_manager.add_view( { std::make_unique<CPipelineView>( ), ICON_PIPE, "Pipeline Demo" } );
@@ -53,7 +60,17 @@ void CApp::init( ) {
 }
 
 void CApp::render( ) {
+    if ( m_config.settings.use_bg ) {
+        ImGui::GetBackgroundDrawList( )->AddImage((ImTextureID)m_background_image.texture_id, ImVec2( 0, 0 ), ImGui::GetIO( ).DisplaySize );
+    }
+
+    if ( m_config.settings.use_bg ) {
+        ImGui::PushStyleColor( ImGuiCol_ChildBg, ImVec4( 0, 0, 0, 0 ) );
+    }
     m_ui_manager.render( );
+    if ( m_config.settings.use_bg ) {
+        ImGui::PopStyleColor( );
+    }
 
     // rendered on top of the general UI
     Notify::render_notifications( );

@@ -60,6 +60,10 @@ void CWindowManager::render_frame( ) {
                                     ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_NoScrollbar |
                                     ImGuiWindowFlags_NoScrollWithMouse;
 
+    if ( m_config.settings.use_bg ) {
+        window_flags |= ImGuiWindowFlags_NoBackground;
+    }
+
     ImGui::Begin( "Main Window", nullptr, window_flags );
     m_render_fn( );
     ImGui::End( );

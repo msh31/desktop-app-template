@@ -17,6 +17,9 @@ CConfig::CConfig( fs::path config_dir ) : m_config_file( config_dir / "config.js
             }
             save( );
         }
+
+        fs::create_directories( paths::backgrounds_dir( ));
+
         load( );
 
         // if(!fs::exists(paths::cache_dir())) {
@@ -40,6 +43,9 @@ CConfig::~CConfig( ) {
 void CConfig::save( ) {
     json data;
     data["dark_mode"] = settings.dark_mode;
+    data["use_bg"] = settings.use_bg;
+    data["bg_name"] = settings.bg_name;
+
     data["window_w"] = settings.window_w;
     data["window_h"] = settings.window_h;
 
@@ -59,6 +65,9 @@ void CConfig::load( ) {
     try {
         data = json::parse( file );
         settings.dark_mode = data.value( "dark_mode", true );
+        settings.use_bg = data.value( "use_bg", false );
+        settings.bg_name = data.value( "bg_name", std::string( "" ) );
+
         settings.window_w = data.value( "window_w", 0 );
         settings.window_h = data.value( "window_h", 0 );
     } catch ( json::exception& ex ) {

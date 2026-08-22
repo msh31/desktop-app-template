@@ -9,6 +9,8 @@ class CConfig {
 
         struct AppConfig {
                 bool dark_mode = true;
+                bool use_bg = false;
+                std::string bg_name = { };
 
                 // 0 means "unset" - window_manager computes a default from the primary monitor
                 int window_w = 0;

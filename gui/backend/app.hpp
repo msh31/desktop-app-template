@@ -2,6 +2,7 @@
 #include <config/config.hpp>
 #include <utils/paths.hpp>
 #include <backend/ui_manager/ui_manager.hpp>
+#include <backend/image_manager/image_manager.hpp>
 
  #include <frontend/layout/tabbar/tabbar.hpp>
 //#include <frontend/layout/sidebar/sidebar.hpp>
@@ -26,4 +27,6 @@ class CApp {
 
         CMenuBar m_menubar;
         CStatusBar m_statusbar;
+
+        ImageData m_background_image = { };
 };

@@ -36,9 +36,14 @@ namespace paths {
         return default_config_dir( );
     }
 
+    //redirects the config location if present - TODO: verify this
     inline fs::path redirect_file( ) { return config_dir( ) / "cfg.redirect"; }
+
     inline fs::path log_dir( ) { return config_dir( ) / "logs"; }
+    inline fs::path log_file( ) { return log_dir( ) / std::format( "{}.log", APP_NAME.data( ) ); }
+
     inline fs::path cache_dir( ) { return config_dir( ) / "cache"; }
+    inline fs::path backgrounds_dir( ) { return config_dir( ) / "backgrounds"; }
 
     inline fs::path documents_dir( ) {
 #if defined( _WIN32 )
@@ -54,6 +59,4 @@ namespace paths {
 #endif
         return home_dir() / "Documents";
     }
-
-    inline fs::path log_file( ) { return log_dir( ) / std::format( "{}.log", APP_NAME.data( ) ); }
 }; // namespace paths
