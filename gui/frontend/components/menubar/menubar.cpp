@@ -2,6 +2,8 @@
 #include <branding.hpp>
 #include <logger.hpp>
 
+#include <frontend/childguard.hpp>
+
 void CMenuBar::add_group( CMenuBarGroup group ) {
     SPDLOG_INFO( "Adding group: {}", group.label );
     m_groups.push_back( std::move( group ) );
@@ -36,7 +38,7 @@ void CMenuBar::render( ) {
     float label_y = btn_h + gap;
     float total_h = label_y + font_h + gap;
 
-    ImGui::BeginChild(
+    ChildGuard menubar_child(
         "##menubar", { 0.f, total_h }, ImGuiChildFlags_None,
         ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse );
 
@@ -93,6 +95,4 @@ void CMenuBar::render( ) {
 
     ImGui::SetCursorPosY( label_y + font_h + gap * 0.5f );
     ImGui::Separator( );
-
-    ImGui::EndChild( );
 }

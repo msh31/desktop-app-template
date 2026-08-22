@@ -1,5 +1,7 @@
 #include "ribbon.hpp"
 
+#include <frontend/childguard.hpp>
+
 void CRibbonShell::add_nav_item( CBaseView::ViewItem item ) { m_items.push_back( item ); }
 
 CBaseView* CRibbonShell::render( CBaseView* active ) {
@@ -21,9 +23,8 @@ CBaseView* CRibbonShell::render( CBaseView* active ) {
     ImGui::Separator( );
     ImGui::PopStyleVar( );
 
-    ImGui::BeginChild( "##content", { 0, 0 }, ImGuiChildFlags_Borders );
+    ChildGuard content_child( "##content", { 0, 0 }, ImGuiChildFlags_Borders );
     if ( active ) active->render( );
-    ImGui::EndChild( );
 
     return result;
 }

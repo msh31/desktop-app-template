@@ -1,11 +1,13 @@
 #pragma once
 
+#include <frontend/childguard.hpp>
+
 namespace Spinner {
     inline void render( ) {
         ImVec2 avail = ImGui::GetContentRegionAvail( );
         ImVec2 center( ( avail.x - 24 ) * 0.5f, ( avail.y - 40 ) * 0.5f );
 
-        ImGui::BeginChild( "LoadingScreen", avail ); //, true, ImGuiWindowFlags_NoScrollbar);
+        ChildGuard loading_screen( "LoadingScreen", avail ); //, true, ImGuiWindowFlags_NoScrollbar);
         ImGui::SetCursorPos( center );
 
         static float angle = 0.0f;
@@ -27,6 +29,5 @@ namespace Spinner {
 
         ImGui::SetCursorPos( ImVec2( ( avail.x - ImGui::CalcTextSize( "Loading" ).x ) * 0.5f, center.y + 35 ) );
         ImGui::Text( "Loading" );
-        ImGui::EndChild( );
     }
 } // namespace Spinner

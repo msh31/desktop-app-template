@@ -1,6 +1,8 @@
 #include "log_view.hpp"
-#include <frontend/notification/notification.hpp>
 #include <logger.hpp>
+
+#include <frontend/notification/notification.hpp>
+#include <frontend/childguard.hpp>
 
 void CLogView::render( ) {
     auto* sink = get_ringbuffer_sink( );
@@ -27,8 +29,7 @@ void CLogView::render( ) {
     }
     ImGui::Separator( );
 
-    ImGui::BeginChild( "##log_scroll", { 0.f, 0.f }, ImGuiChildFlags_None, ImGuiWindowFlags_HorizontalScrollbar );
-
+    ChildGuard log_field( "##log_scroll", { 0.f, 0.f }, ImGuiChildFlags_None, ImGuiWindowFlags_HorizontalScrollbar );
     for ( const auto& msg : messages ) {
         ImVec4 col = ImGui::GetStyleColorVec4( ImGuiCol_Text );
         if ( msg.find( "[error]" ) != std::string::npos || msg.find( "[critical]" ) != std::string::npos )
@@ -42,6 +43,4 @@ void CLogView::render( ) {
     }
 
     if ( m_auto_scroll && ImGui::GetScrollY( ) >= ImGui::GetScrollMaxY( ) - 8.f ) ImGui::SetScrollHereY( 1.f );
-
-    ImGui::EndChild( );
 }

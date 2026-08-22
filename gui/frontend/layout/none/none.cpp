@@ -1,9 +1,10 @@
 #include "none.hpp"
 
+#include <frontend/childguard.hpp>
+
 CBaseView* CNoShell::render( CBaseView* active ) {
-    ImGui::BeginChild( "##content", { 0, 0 }, ImGuiChildFlags_Borders );
+    ChildGuard content_child( "##content", { 0, 0 }, ImGuiChildFlags_Borders );
     if ( active ) active->render( );
-    ImGui::EndChild( );
 
     return nullptr;
 }

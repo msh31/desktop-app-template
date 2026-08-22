@@ -1,5 +1,7 @@
 #include "tabbar.hpp"
 
+#include <frontend/childguard.hpp>
+
 void CTabbarShell::add_nav_item( CBaseView::ViewItem item ) { m_items.push_back( item ); }
 
 CBaseView* CTabbarShell::render( CBaseView* active ) {
@@ -16,9 +18,8 @@ CBaseView* CTabbarShell::render( CBaseView* active ) {
         ImGui::EndTabBar( );
     }
 
-    ImGui::BeginChild( "##content", { 0, 0 }, ImGuiChildFlags_Borders );
+    ChildGuard content_child( "##content", { 0, 0 }, ImGuiChildFlags_Borders );
     if ( active ) active->render( );
-    ImGui::EndChild( );
 
     return result;
 }

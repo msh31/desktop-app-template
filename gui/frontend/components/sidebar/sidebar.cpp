@@ -1,12 +1,13 @@
 #include "sidebar.hpp"
 #include <branding.hpp>
 #include <backend/font_manager/font_manager.hpp>
+#include <frontend/childguard.hpp>
 #include <frontend/icons.hpp>
 
 CBaseView* CSideBar::render( CBaseView* active ) {
     float width = collapsed ? 60.0f : 275.f;
 
-    ImGui::BeginChild( "##sidebar", { width, 0 }, ImGuiChildFlags_Borders );
+    ChildGuard sidebar_child( "##sidebar", { width, 0 }, ImGuiChildFlags_Borders );
     float content_w = ImGui::GetContentRegionAvail( ).x;
     float btn_h = ImGui::GetFrameHeight( );
     CBaseView* r_item = nullptr;
@@ -55,7 +56,6 @@ CBaseView* CSideBar::render( CBaseView* active ) {
     }
     ImGui::PopStyleVar( );
 
-    ImGui::EndChild( );
     return r_item;
 }
 

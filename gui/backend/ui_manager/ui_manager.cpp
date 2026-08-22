@@ -1,6 +1,8 @@
 #include "ui_manager.hpp"
 #include <logger.hpp>
 
+#include <frontend/childguard.hpp>
+
 CUIManager::CUIManager( std::unique_ptr<IShell> shell ) : m_shell( std::move( shell ) ) {}
 
 CBaseView* CUIManager::add_view( ViewConfig cfg ) {
@@ -40,11 +42,12 @@ void CUIManager::render( ) {
     if ( m_menubar ) m_menubar->render( );
 
     float sb_h = m_statusbar ? CStatusBar::height( ) + ImGui::GetStyle( ).ItemSpacing.y : 0.f;
-    ImGui::BeginChild(
-        "##shell_area", { 0.f, -sb_h }, ImGuiChildFlags_None,
-        ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse );
-    if ( auto* clicked = m_shell->render( m_active_view ) ) set_active_view( clicked );
-    ImGui::EndChild( );
+    {
+        ChildGuard shell_area(
+            "##shell_area", { 0.f, -sb_h }, ImGuiChildFlags_None,
+            ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse );
+        if ( auto* clicked = m_shell->render( m_active_view ) ) set_active_view( clicked );
+    }
 
     if ( m_statusbar ) m_statusbar->render( );
 }
