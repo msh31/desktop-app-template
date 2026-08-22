@@ -7,8 +7,6 @@
 
 CSettingsView::CSettingsView( CConfig& cfg ) : m_config( cfg ) {};
 
-void CSettingsView::on_enter( ) {}
-
 void CSettingsView::render( ) {
     static bool test = false, test2 = false;
 
@@ -55,7 +53,5 @@ void CSettingsView::render( ) {
         }
     }
 }
-
-void CSettingsView::on_exit( ) {}
 
 CSettingsView::~CSettingsView( ) {}

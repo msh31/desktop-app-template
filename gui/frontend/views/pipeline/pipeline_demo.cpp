@@ -64,6 +64,4 @@ std::string_view CPipelineView::pe_to_string( PipelineError e ) {
     }
 }
 
-void CPipelineView::on_enter( ) {}
-void CPipelineView::on_exit( ) {}
 CPipelineView::~CPipelineView( ) {};

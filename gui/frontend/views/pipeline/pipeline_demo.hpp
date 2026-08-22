@@ -8,8 +8,6 @@ class CPipelineView : public CBaseView {
         ~CPipelineView( ) override;
 
         void render( ) override;
-        void on_enter( ) override;
-        void on_exit( ) override;
 
     private:
         CTextPipeline m_pipeline;
