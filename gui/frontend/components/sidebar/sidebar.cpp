@@ -42,7 +42,7 @@ CBaseView* CSideBar::render( CBaseView* active ) {
             r_item = item.view;
             break;
         }
-        if ( collapsed ) ImGui::SetItemTooltip( item.label );
+        if ( collapsed ) ImGui::SetItemTooltip( "%s", item.label );
     }
 
     auto avail = ImGui::GetContentRegionAvail();
