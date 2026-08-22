@@ -40,8 +40,8 @@ namespace paths {
     inline fs::path log_dir( ) { return config_dir( ) / "logs"; }
     inline fs::path cache_dir( ) { return config_dir( ) / "cache"; }
 
-#if defined( _WIN32 )
     inline fs::path documents_dir( ) {
+#if defined( _WIN32 )
         PWSTR path = NULL;
         HRESULT h_res = SHGetKnownFolderPath( FOLDERID_Documents, 0, NULL, &path );
         if ( SUCCEEDED( h_res ) ) {
@@ -51,8 +51,9 @@ namespace paths {
         } else {
             throw std::runtime_error( "USERPROFILE not set, how did you manage to do this?" );
         }
-    }
 #endif
+        return home_dir() / "Documents";
+    }
 
     inline fs::path log_file( ) { return log_dir( ) / std::format( "{}.log", APP_NAME.data( ) ); }
 }; // namespace paths
