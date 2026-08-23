@@ -5,6 +5,7 @@
 #include <filesystem>
 #include <logger.hpp>
 #include <nlohmann/json.hpp>
+#include <charconv>
 
 namespace fs = std::filesystem;
 
@@ -88,14 +89,15 @@ std::string Network::download_to_string( std::string_view url ) {
 
 std::tuple<int, int, int> Network::parse_version( std::string_view v ) {
     std::istringstream ss( ( std::string( v ) ) );
-    std::string segment;
+    std::string segment = { };
     int major = 0, minor = 0, patch = 0;
+
     int i = 0;
     while ( std::getline( ss, segment, '.' ) && i < 3 ) {
         if ( i == 0 ) segment.erase( 0, 1 ); // strip 'v'
-        if ( i == 0 ) major = std::stoi( segment );
-        if ( i == 1 ) minor = std::stoi( segment );
-        if ( i == 2 ) patch = std::stoi( segment );
+        if ( i == 0 ) std::from_chars( segment.data( ), segment.data( ) + segment.size( ), major );
+        if ( i == 1 ) std::from_chars( segment.data( ), segment.data( ) + segment.size( ), minor );
+        if ( i == 2 ) std::from_chars( segment.data( ), segment.data( ) + segment.size( ), patch );
         i++;
     }
     return { major, minor, patch };
