@@ -34,6 +34,7 @@ CConfig::CConfig( fs::path config_dir ) : m_config_file( config_dir / "config.js
 
 CConfig::~CConfig( ) {
     try {
+        SPDLOG_INFO( "[Config] saving config before exiting.." );
         save( );
     } catch ( const std::exception& err ) {
         SPDLOG_CRITICAL( "config destructor: {}", err.what( ) );
@@ -51,6 +52,7 @@ void CConfig::save( ) {
 
     std::ofstream file( m_config_file );
     file << data.dump( 4 );
+    file.close( );
 }
 
 void CConfig::load( ) {
