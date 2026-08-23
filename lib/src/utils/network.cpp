@@ -6,8 +6,23 @@
 #include <logger.hpp>
 #include <nlohmann/json.hpp>
 
-using json = nlohmann::json;
 namespace fs = std::filesystem;
+
+using json = nlohmann::json;
+using curl_handle = std::unique_ptr<CURL, decltype(&curl_easy_cleanup)>;
+
+curl_handle make_easy_handle(std::string_view url) {
+    curl_handle handle( curl_easy_init( ), &curl_easy_cleanup );
+    if ( !handle ) {
+        SPDLOG_ERROR( "[Network] Failed to initialize CURL" );
+        return handle;
+    }
+    curl_easy_setopt( handle.get( ), CURLOPT_USERAGENT, APP_NAME );
+    curl_easy_setopt( handle.get( ), CURLOPT_URL, std::string(url).c_str( ) );
+    curl_easy_setopt( handle.get( ), CURLOPT_TIMEOUT, 30L ); //compelte within 30sec
+    curl_easy_setopt( handle.get( ), CURLOPT_CONNECTTIMEOUT, 10L );  // connect within 10sec
+    return handle;
+}
 
 size_t Network::write_callback( void* ptr, size_t size, size_t nmemb, FILE* stream ) {
     return fwrite( ptr, size, nmemb, stream ) * size;
@@ -19,34 +34,25 @@ size_t Network::stream_callback( void* ptr, size_t size, size_t nmemb, FILE* str
 }
 
 bool Network::download_file( std::string_view url, const std::string& output_path ) {
-    CURL* curl = curl_easy_init( );
-    if ( !curl ) {
-        SPDLOG_ERROR( "Failed to initialize CURL" );
-        return false;
-    }
+    auto handle = make_easy_handle( url );
+    if ( !handle ) return { };
 
     std::string tmp_path = output_path + ".tmp";
     FILE* fp = fopen( tmp_path.c_str( ), "wb" );
     if ( !fp ) {
-        SPDLOG_ERROR( "Failed to open file for writing: {}", tmp_path );
-        curl_easy_cleanup( curl );
+        SPDLOG_ERROR( "[Network] Failed to open file for writing: {}", tmp_path );
         return false;
     }
 
-    std::string url_str{ url };
-    curl_easy_setopt( curl, CURLOPT_USERAGENT, APP_NAME );
-    curl_easy_setopt( curl, CURLOPT_URL, url_str.c_str( ) );
-    curl_easy_setopt( curl, CURLOPT_WRITEFUNCTION, write_callback );
-    curl_easy_setopt( curl, CURLOPT_WRITEDATA, fp );
-    curl_easy_setopt( curl, CURLOPT_FAILONERROR, 1L ); // http respones 400+
+    curl_easy_setopt( handle.get( ), CURLOPT_WRITEFUNCTION, write_callback );
+    curl_easy_setopt( handle.get( ), CURLOPT_FAILONERROR, 1L ); // http respones 400+
+    curl_easy_setopt( handle.get( ), CURLOPT_WRITEDATA, fp );
 
-    CURLcode res = curl_easy_perform( curl );
-
+    CURLcode res = curl_easy_perform( handle.get( ) );
     fclose( fp );
-    curl_easy_cleanup( curl );
 
     if ( res != CURLE_OK ) {
-        SPDLOG_ERROR( "Failed to download file: {}", curl_easy_strerror( res ) );
+        SPDLOG_ERROR( "[Network] Failed to download file: {}", curl_easy_strerror( res ) );
         fs::remove( tmp_path );
         return false;
     }
@@ -54,7 +60,7 @@ bool Network::download_file( std::string_view url, const std::string& output_pat
     std::error_code ec;
     fs::rename( tmp_path, output_path, ec );
     if ( ec ) {
-        SPDLOG_ERROR( "Failed to move downloaded file into place: {}", ec.message( ) );
+        SPDLOG_ERROR( "[Network] Failed to move downloaded file into place: {}", ec.message( ) );
         fs::remove( tmp_path );
         return false;
     }
@@ -63,25 +69,17 @@ bool Network::download_file( std::string_view url, const std::string& output_pat
 }
 
 std::string Network::download_to_string( std::string_view url ) {
-    CURL* curl = curl_easy_init( );
-    if ( !curl ) {
-        SPDLOG_ERROR( "Failed to initialize CURL" );
-        return { };
-    }
+    auto handle = make_easy_handle( url );
+    if ( !handle ) return { };
 
-    std::string data;
-    std::string url_str{ url };
-    curl_easy_setopt( curl, CURLOPT_USERAGENT, APP_NAME );
-    curl_easy_setopt( curl, CURLOPT_URL, url_str.c_str( ) );
-    curl_easy_setopt( curl, CURLOPT_WRITEFUNCTION, stream_callback );
-    curl_easy_setopt( curl, CURLOPT_WRITEDATA, &data );
-    curl_easy_setopt( curl, CURLOPT_FAILONERROR, 1L ); // http respones 400+
+    std::string data = { };
+    curl_easy_setopt( handle.get( ), CURLOPT_WRITEFUNCTION, stream_callback );
+    curl_easy_setopt( handle.get( ), CURLOPT_WRITEDATA, &data );
+    curl_easy_setopt( handle.get( ), CURLOPT_FAILONERROR, 1L ); // http respones 400+
 
-    CURLcode res = curl_easy_perform( curl );
-    curl_easy_cleanup( curl );
-
+    CURLcode res = curl_easy_perform( handle.get( ) );
     if ( res != CURLE_OK ) {
-        SPDLOG_ERROR( "Failed to stream: {}", curl_easy_strerror( res ) );
+        SPDLOG_ERROR( "[Network] Failed to stream: {}", curl_easy_strerror( res ) );
         return { };
     }
 
@@ -108,14 +106,14 @@ bool Network::is_update_available( ) {
     std::string upstream =Network:: download_to_string( update_url );
 
     if ( upstream.empty( ) ) {
-        SPDLOG_ERROR( "Failed to get connect to GitHub API to fetch the latest version" );
+        SPDLOG_ERROR( "[Network] Failed to get connect to GitHub API to fetch the latest version" );
         return false;
     }
 
     try {
         data = json::parse( upstream );
     } catch ( json::exception& ex ) {
-        SPDLOG_ERROR( "JSON parsing error: {}", ex.what( ) );
+        SPDLOG_ERROR( "[Network] JSON parsing error: {}", ex.what( ) );
         return false;
     }
 
