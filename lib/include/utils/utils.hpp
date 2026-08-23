@@ -2,10 +2,10 @@
 #include <logger.hpp>
 
 #ifdef __APPLE__
+    #include <ctime>
     #include <spawn.h>
     #include <sys/wait.h>
-#endif
-#ifdef __linux__
+#elif __linux__
     #include <sys/wait.h>
 #endif
 #ifdef _WIN32
