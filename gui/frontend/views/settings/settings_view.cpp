@@ -1,5 +1,6 @@
 #include "settings_view.hpp"
 #include <utils/utils.hpp>
+#include <utils/image_extensions.hpp>
 
 #include <frontend/theme/theme.hpp>
 #include <frontend/childguard.hpp>
@@ -8,13 +9,15 @@
 CSettingsView::CSettingsView( CConfig& cfg ) : m_config( cfg ) {};
 
 void CSettingsView::on_enter() {
+    m_backgrounds.clear( );
+
     for ( const auto& f : fs::directory_iterator( paths::backgrounds_dir( ), fs::directory_options::skip_permission_denied ) ) {
-        m_backgrounds.emplace_back( f.path( ).filename( ).string( ) );
+        if ( f.is_regular_file( ) && utils::is_image_file( f.path( ) ) ) {
+            m_backgrounds.emplace_back( f.path( ).filename( ).string( ) );
+        }
     }
 
-    for ( const auto& b : m_backgrounds ) {
-        m_labels.push_back( b.c_str( ) );
-    }
+    m_current_background = 0;
     auto it = std::find( m_backgrounds.begin( ), m_backgrounds.end( ), m_config.settings.bg_name );
     if ( it != m_backgrounds.end( ) ) {
         m_current_background = (int)std::distance( m_backgrounds.begin( ), it );
@@ -47,8 +50,16 @@ void CSettingsView::render( ) {
             ImGui::TextWrapped( "%s", str.c_str( ) );
         } else {
             ImGui::Checkbox( "Custom Background", &m_config.settings.use_bg );
-            if ( ImGui::ListBox( "##bg_list", &m_current_background, m_labels.data( ), (int)m_labels.size( ), 4 ) ) {
-                m_config.settings.bg_name = m_backgrounds[m_current_background];
+
+            if ( ImGui::BeginListBox( "##bg_list" ) ) {
+                for ( int i = 0; i < (int)m_backgrounds.size( ); i++ ) {
+                    bool is_selected = ( m_current_background == i );
+                    if ( ImGui::Selectable( m_backgrounds[i].c_str( ), is_selected ) ) {
+                        m_current_background = i;
+                        m_config.settings.bg_name = m_backgrounds[i];
+                    }
+                }
+                ImGui::EndListBox( );
             }
         }
 
@@ -75,7 +86,7 @@ void CSettingsView::render( ) {
 }
 
 void CSettingsView::on_exit( ) {
-
+    m_backgrounds.clear();
 }
 
 CSettingsView::~CSettingsView( ) {}

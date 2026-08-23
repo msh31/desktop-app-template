@@ -144,6 +144,7 @@ set(template_lib_SOURCES
 	"lib/include/types.hpp"
 	"lib/include/utils/cache.hpp"
 	"lib/include/utils/disk_cache.hpp"
+	"lib/include/utils/image_extensions.hpp"
 	"lib/include/utils/paths.hpp"
 	"lib/include/utils/utils.hpp"
 	"lib/src/config/config.cpp"

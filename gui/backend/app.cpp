@@ -17,12 +17,7 @@
 #include <frontend/notification/notification.hpp>
 
 void CApp::init( ) {
-    if ( m_config.settings.use_bg && !m_config.settings.bg_name.empty( ) ) {
-        auto path = paths::backgrounds_dir( ) / m_config.settings.bg_name;
-        if ( fs::exists( path ) ) {
-            m_background_image = CImageManager::get( ).load_from_disk( path, "background" );
-        }
-    }
+    refresh_background( );
 
     SPDLOG_INFO( "Setting up application views.." );
     m_ui_manager.add_view( { std::make_unique<CHomeView>( ), ICON_HOME, "Home" } );
@@ -59,7 +54,28 @@ void CApp::init( ) {
     m_ui_manager.set_statusbar( std::move( m_statusbar ) );
 }
 
+void CApp::refresh_background( ) {
+    if ( !m_config.settings.use_bg || m_config.settings.bg_name.empty( ) ) {
+        m_loaded_bg_name.clear( );
+        return;
+    }
+
+    if ( m_config.settings.bg_name == m_loaded_bg_name ) return;
+
+    auto path = paths::backgrounds_dir( ) / m_config.settings.bg_name;
+    if ( fs::exists( path ) ) {
+        m_background_image = CImageManager::get( ).load_from_disk( path, "background" );
+        m_loaded_bg_name = m_config.settings.bg_name;
+    } else {
+        m_config.settings.use_bg = false;
+        Notify::show_notification(
+            "Custom Background", "Failed to apply custom background because the file does not exist!", 1500 );
+    }
+}
+
 void CApp::render( ) {
+    refresh_background( );
+
     bool use_bg = m_config.settings.use_bg;
 
     if ( use_bg ) {

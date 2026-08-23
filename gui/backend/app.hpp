@@ -17,6 +17,8 @@ class CApp {
         void render( );
 
     private:
+        void refresh_background( );
+
         CConfig& m_config;
          CUIManager m_ui_manager { std::make_unique<CTabbarShell>() };
         //CUIManager m_ui_manager{ std::make_unique<CSidebarShell>( ) };
@@ -29,4 +31,5 @@ class CApp {
         CStatusBar m_statusbar;
 
         ImageData m_background_image = { };
+        std::string m_loaded_bg_name = { };
 };
