@@ -107,6 +107,7 @@ void CWindowManager::setup_opengl( ) {
     m_window = glfwCreateWindow( width, height, APP_NAME.data( ), nullptr, nullptr );
     if ( m_window == nullptr ) {
         glfwTerminate( );
+        throw std::runtime_error( "[WindowManager] Failed to create window!" );
     }
 
     #if defined( _WIN32 )
