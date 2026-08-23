@@ -25,7 +25,9 @@ void CTextPipeline::build( ) {
 
     if ( m_truncate ) {
         m_stages.push_back( [this]( std::string s ) -> std::expected<std::string, PipelineError> {
-            s.resize( m_max_str_len );
+            if ( s.size( ) > m_max_str_len ) {
+                s.resize( m_max_str_len );
+            }
             return s;
         } );
     }
