@@ -12,6 +12,11 @@ apple.languages = ["OBJC"]
 [variables]
 CMAKE_EXPORT_COMPILE_COMMANDS = true
 BUILD_GMOCK = false
+CURL_USE_LIBPSL = false
+BUILD_EXAMPLES = false
+BUILD_LIBCURL_DOCS = false
+BUILD_MISC_DOCS = false
+BUILD_CURL_EXE = false
 
 # dependencies
 [fetch-content.glfw]
@@ -32,7 +37,11 @@ tag = "v1.18.0"
 [fetch-content.nfd]
 git = "https://github.com/btzy/nativefiledialog-extended"
 tag = "v1.3.0"
+[fetch-content.curl]
+git = "https://github.com/curl/curl"
+tag = "curl-8_21_0"
 
+# targets
 [target.imgui]
 type = "static"
 sources = [
@@ -52,7 +61,7 @@ type = "static"
 sources = ["lib/src/**.cpp", "lib/include/**.hpp"]
 include-directories = ["lib/include"]
 compile-features = ["cxx_std_23"]
-link-libraries = ["nlohmann_json::nlohmann_json", "spdlog::spdlog"]
+link-libraries = ["nlohmann_json::nlohmann_json", "spdlog::spdlog", "CURL::libcurl"]
 precompile-headers = ["lib/include/lib_pch.hpp"]
 
 [target.template_app]
@@ -72,10 +81,16 @@ include-directories = [
 compile-features = ["cxx_std_23"]
 link-libraries = ["template_lib", "imgui", "spdlog::spdlog", "nfd"]
 precompile-headers = ["gui/pch.hpp"]
+cmake-after = """
+if(WIN32)
+  set(CURL_USE_SCHANNEL ON)
+endif()
+"""
 
 [target.template_app.windows]
 link-libraries = ["Dwmapi"]
 
+# tests
 [target.template_tests]
 type = "executable"
 sources = ["tests/**.cpp"]

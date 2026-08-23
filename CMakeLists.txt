@@ -27,6 +27,11 @@ endif()
 # Variables
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(BUILD_GMOCK OFF)
+set(CURL_USE_LIBPSL OFF)
+set(BUILD_EXAMPLES OFF)
+set(BUILD_LIBCURL_DOCS OFF)
+set(BUILD_MISC_DOCS OFF)
+set(BUILD_CURL_EXE OFF)
 
 project("Desktop App Template"
 	LANGUAGES
@@ -103,6 +108,15 @@ FetchContent_Declare(nfd
 )
 FetchContent_MakeAvailable(nfd)
 
+message(STATUS "Fetching curl (curl-8_21_0)...")
+FetchContent_Declare(curl
+	GIT_REPOSITORY
+		"https://github.com/curl/curl"
+	GIT_TAG
+		curl-8_21_0
+)
+FetchContent_MakeAvailable(curl)
+
 # Target: imgui
 set(imgui_SOURCES
 	"${imgui_SOURCE_DIR}/backends/imgui_impl_glfw.cpp"
@@ -145,6 +159,7 @@ set(template_lib_SOURCES
 	"lib/include/utils/cache.hpp"
 	"lib/include/utils/disk_cache.hpp"
 	"lib/include/utils/image_extensions.hpp"
+	"lib/include/utils/network.hpp"
 	"lib/include/utils/paths.hpp"
 	"lib/include/utils/utils.hpp"
 	"lib/src/config/config.cpp"
@@ -168,6 +183,7 @@ target_include_directories(template_lib PUBLIC
 target_link_libraries(template_lib PUBLIC
 	nlohmann_json::nlohmann_json
 	spdlog::spdlog
+	CURL::libcurl
 )
 
 target_precompile_headers(template_lib PUBLIC
@@ -275,6 +291,11 @@ target_precompile_headers(template_app PRIVATE
 get_directory_property(CMKR_VS_STARTUP_PROJECT DIRECTORY ${PROJECT_SOURCE_DIR} DEFINITION VS_STARTUP_PROJECT)
 if(NOT CMKR_VS_STARTUP_PROJECT)
 	set_property(DIRECTORY ${PROJECT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT template_app)
+endif()
+
+set(CMKR_TARGET template_app)
+if(WIN32)
+  set(CURL_USE_SCHANNEL ON)
 endif()
 
 # Target: template_tests

@@ -1,6 +1,7 @@
 #include "app.hpp"
 #include <branding.hpp>
 #include <logger.hpp>
+#include <utils/network.hpp>
 
 #include <frontend/icons.hpp>
 #include <frontend/theme/theme.hpp>
@@ -18,6 +19,10 @@
 #include <frontend/notification/notification.hpp>
 
 void CApp::init( ) {
+    if ( Network::is_update_available( ) ) {
+        Notify::show_notification( "Update Check", "A new update is available to download!", 1500 );
+    }
+
     refresh_background( );
 
     SPDLOG_INFO( "Setting up application views.." );

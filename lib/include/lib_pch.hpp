@@ -20,6 +20,7 @@
     #include <thread>
     #include <unordered_set>
     #include <vector>
+    #include <string_view>
 
 namespace fs = std::filesystem;
 #endif
