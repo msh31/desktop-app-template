@@ -165,6 +165,7 @@ set(template_lib_SOURCES
 	"lib/src/config/config.cpp"
 	"lib/src/task_runner/task_runner.cpp"
 	"lib/src/text_pipeline/text_pipeline.cpp"
+	"lib/src/utils/network.cpp"
 )
 
 add_library(template_lib STATIC)
