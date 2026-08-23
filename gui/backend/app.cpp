@@ -4,6 +4,7 @@
 
 #include <frontend/icons.hpp>
 #include <frontend/theme/theme.hpp>
+#include <frontend/ui.hpp>
 
 #include <frontend/views/cache_demo/cache_demo_view.hpp>
 #include <frontend/views/debug/debug_view.hpp>
@@ -79,7 +80,10 @@ void CApp::render( ) {
     bool use_bg = m_config.settings.use_bg;
 
     if ( use_bg ) {
-        ImGui::GetBackgroundDrawList( )->AddImage((ImTextureID)m_background_image.texture_id, ImVec2( 0, 0 ), ImGui::GetIO( ).DisplaySize );
+        ui::add_cover_image(
+            ImGui::GetBackgroundDrawList( ), (ImTextureID)m_background_image.texture_id, ImVec2( 0, 0 ),
+            ImGui::GetIO( ).DisplaySize, (float)m_background_image.texture_width,
+            (float)m_background_image.texture_height );
         ImGui::PushStyleColor( ImGuiCol_ChildBg, ImVec4( 0, 0, 0, 0 ) );
     }
 

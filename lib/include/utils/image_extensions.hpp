@@ -5,7 +5,7 @@ namespace utils {
         ".png", ".jpg", ".jpeg", ".bmp", ".tga", ".psd", ".gif", ".hdr", ".pic", ".pnm", ".ppm", ".pgm"
     };
 
-    inline bool is_image_file( const std::filesystem::path& path ) {
+    inline bool is_image_file( const fs::path& path ) {
         auto ext = path.extension( ).string( );
         std::transform( ext.begin( ), ext.end( ), ext.begin( ), []( unsigned char c ) { return std::tolower( c ); } );
 
