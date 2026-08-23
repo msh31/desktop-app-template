@@ -12,6 +12,10 @@
     #include <shellapi.h>
 #endif
 
+#ifdef __APPLE__
+extern char** environ;
+#endif
+
 namespace utils { //All functions in this namespace should work across Windows, Linux and macOS
     inline std::string get_username( ) {
 #if defined( __linux__ ) || defined( __APPLE__ )
@@ -48,7 +52,6 @@ namespace utils { //All functions in this namespace should work across Windows, 
         ShellExecuteA( NULL, "open", path, NULL, NULL, SW_SHOWDEFAULT );
 #endif
 #ifdef __APPLE__
-        extern char** environ;
         pid_t pid;
 
         const char* argv[] = { "open", path, nullptr };
