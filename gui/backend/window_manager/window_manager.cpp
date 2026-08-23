@@ -20,6 +20,7 @@ namespace {
     constexpr int kMinWindowW = 640;
     constexpr int kMinWindowH = 480;
     constexpr float kDefaultWindowFraction = 0.7f; // of the primary monitor's work area
+    static bool callback_error_triggered = false;
 } // namespace
 
 bool CWindowManager::should_continue( ) {
@@ -75,7 +76,8 @@ void CWindowManager::render_frame( ) {
 
 static void error_callback( int error, const char* description ) {
     auto str = std::format( "A fatal error occured: {}", description );
-    throw std::runtime_error( str.c_str( ) );
+    SPDLOG_CRITICAL( "{}", str );
+    callback_error_triggered = true;
 }
 
 void CWindowManager::setup_opengl( ) {
@@ -104,8 +106,9 @@ void CWindowManager::setup_opengl( ) {
         }
     }
 
+    callback_error_triggered = false;
     m_window = glfwCreateWindow( width, height, APP_NAME.data( ), nullptr, nullptr );
-    if ( m_window == nullptr ) {
+    if ( m_window == nullptr || callback_error_triggered ) {
         glfwTerminate( );
         throw std::runtime_error( "[WindowManager] Failed to create window!" );
     }
