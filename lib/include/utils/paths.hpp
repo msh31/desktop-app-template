@@ -45,6 +45,8 @@ namespace paths {
     inline fs::path cache_dir( ) { return config_dir( ) / "cache"; }
     inline fs::path backgrounds_dir( ) { return config_dir( ) / "backgrounds"; }
 
+    inline fs::path demo_disk_cache_file( ) { return config_dir( ) / "demo_cache.json"; }
+
     inline fs::path documents_dir( ) {
 #if defined( _WIN32 )
         PWSTR path = NULL;

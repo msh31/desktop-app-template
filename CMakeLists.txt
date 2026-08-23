@@ -143,6 +143,7 @@ set(template_lib_SOURCES
 	"lib/include/text_pipeline/text_pipeline.hpp"
 	"lib/include/types.hpp"
 	"lib/include/utils/cache.hpp"
+	"lib/include/utils/disk_cache.hpp"
 	"lib/include/utils/paths.hpp"
 	"lib/include/utils/utils.hpp"
 	"lib/src/config/config.cpp"
