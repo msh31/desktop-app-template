@@ -15,7 +15,7 @@ void CImageDemoView::render( ) {
     auto scale = std::min( avail.x / m_embedded.texture_width, avail.y / m_embedded.texture_height );
 
 	{
-        ChildGuard pepe( "pepe", { 0.0f, 0.0f }, ImGuiChildFlags_Borders );
+        ChildGuard pepe( "pepe", { 0.0f, 0.0f } );
 
         ImGui::Image((ImTextureID)m_embedded.texture_id, ImVec2( m_embedded.texture_width * scale, m_embedded.texture_height * scale) );
 	}

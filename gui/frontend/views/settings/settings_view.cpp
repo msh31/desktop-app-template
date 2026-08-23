@@ -25,7 +25,7 @@ void CSettingsView::render( ) {
     static bool test = false;
 
     {
-        ChildGuard appearance( "Appearance", { 300.0f, 0.0f }, ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY );
+        ChildGuard appearance( "Appearance", { 300.0f, 0.0f } );
         ImGui::Text( "Appearance" );
 
         if ( ImGui::Checkbox( "Dark Mode", &m_config.settings.dark_mode ) ) {
@@ -58,7 +58,7 @@ void CSettingsView::render( ) {
     ImGui::SameLine( );
 
     {
-        ChildGuard config( "Configuration", { 150.0f, 0.0f }, ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY );
+        ChildGuard config( "Configuration", { 150.0f, 0.0f } );
         ImGui::Text( "Configuration" );
 
         if ( ImGui::Button( "Open" ) ) {
