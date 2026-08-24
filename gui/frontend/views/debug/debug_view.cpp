@@ -35,15 +35,30 @@ void CDebugView::render( ) {
             m_task_handle = m_task_runner.run<int>(
                 []( TaskControl& control ) {
                     for ( int i = 0; i < 20; i++ ) {
+                        if ( control.cancel_requested.load( ) ) throw TaskCancelled{ };
                         std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) );
                         control.progress.store( ( i + 1 ) / 20.0f );
                     }
                     return 0;
                 },
-                []( int ) { Notify::show_notification( "Async", "Task complete!", 2000 ); },
-                []( const std::exception& ex ) { Notify::show_notification( "Error", ex.what( ), 5000 ); } );
+                [this]( int ) {
+                    Notify::show_notification( "Async", "Task complete!", 2000 );
+                    m_task_handle = std::nullopt;
+                },
+                []( const std::exception& ex ) {
+                    Notify::show_notification( "Error", ex.what( ), 5000 );
+                } );
         }
-        if ( m_task_handle ) ImGui::ProgressBar( m_task_handle->progress( ) );
+
+        if ( m_task_handle ) {
+            ImGui::SameLine( );
+            if ( ImGui::Button( "Cancel" ) ) {
+                 m_task_handle->request_cancel( );
+                 m_task_handle = std::nullopt;
+            }
+
+            ImGui::ProgressBar( m_task_handle->progress( ) );
+        }
 
         ImGui::Separator( );
     }
