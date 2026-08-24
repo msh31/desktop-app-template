@@ -302,7 +302,7 @@ endif()
 # Target: template_tests
 set(template_tests_SOURCES
 	cmake.toml
-	"tests/main.cpp"
+	"tests/filesystem.cpp"
 )
 
 add_executable(template_tests)
@@ -320,6 +320,7 @@ target_include_directories(template_tests PRIVATE
 
 target_link_libraries(template_tests PRIVATE
 	GTest::gtest_main
+	template_lib
 )
 
 target_precompile_headers(template_tests PRIVATE

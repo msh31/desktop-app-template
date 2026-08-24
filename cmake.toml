@@ -96,7 +96,7 @@ type = "executable"
 sources = ["tests/**.cpp"]
 include-directories = ["lib/include"]
 compile-features = ["cxx_std_23"]
-link-libraries = ["GTest::gtest_main"]
+link-libraries = ["GTest::gtest_main", "template_lib"]
 precompile-headers = ["lib/include/lib_pch.hpp"]
 cmake-after = """
 enable_testing()
