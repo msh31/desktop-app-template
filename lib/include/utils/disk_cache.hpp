@@ -56,10 +56,13 @@ template <typename T> class CDiskCache {
             return true;
         }
 
-        void refresh( std::function<T( )> fun ) { m_cache.refresh( fun ); }
+        void refresh( std::function<T( TaskControl& )> fun ) { m_cache.refresh( fun ); }
 
         const T& get( ) { return m_cache.get( ); }
         bool is_refreshing( ) { return m_cache.is_refreshing(); }
+
+        float progress( ) { return m_cache.progress( ); }
+        void request_cancel( ) { m_cache.request_cancel( ); }
 
     private:
         //T m_current_snapshot = { };

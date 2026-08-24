@@ -1,18 +1,41 @@
 #pragma once
 
+struct TaskCancelled : std::runtime_error {
+        TaskCancelled( ) : std::runtime_error( "Task cancelled" ) {}
+};
+
+struct TaskControl {
+        std::atomic<float> progress{ 0.0f };
+        std::atomic<bool> cancel_requested{ false };
+};
+
+class TaskHandle {
+    public:
+        explicit TaskHandle( std::shared_ptr<TaskControl> control ) : m_control( std::move( control ) ) {}
+
+        float progress( ) const { return m_control->progress.load( ); }
+        void request_cancel( ) { m_control->cancel_requested.store( true ); }
+        bool cancel_requested( ) const { return m_control->cancel_requested.load( ); }
+
+    private:
+        std::shared_ptr<TaskControl> m_control;
+};
+
 class CTaskRunner {
     public:
         template <typename T>
-        void
-        run( std::function<T( )> work, std::function<void( T )> on_complete,
+        TaskHandle
+        run( std::function<T( TaskControl& )> work, std::function<void( T )> on_complete,
              std::function<void( const std::exception& )> on_error ) {
             auto result = std::make_shared<T>( );
+            auto control = std::make_shared<TaskControl>( );
 
-            auto wl = [work, result]( ) { *result = work( ); };
+            auto wl = [work, result, control]( ) { *result = work( *control ); };
             auto cl = [result, on_complete]( ) { on_complete( *result ); };
             auto el = [on_error]( const std::exception& ex ) { on_error( ex ); };
 
             m_tasks.emplace_back( Task{ std::async( std::launch::async, wl ), cl, el } );
+            return TaskHandle{ control };
         }
         void update( );
 

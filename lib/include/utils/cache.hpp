@@ -6,12 +6,12 @@ template <typename T> class CCache {
     public:
         ~CCache( ) { m_taskrunner.shutdown( ); }
 
-        void refresh( std::function<T( )> fun ) {
+        void refresh( std::function<T( TaskControl& )> fun ) {
             if ( m_is_refreshing ) return;
 
             m_is_refreshing = true;
 
-            m_taskrunner.run<T>(
+            m_task_handle = m_taskrunner.run<T>(
                 fun,
                 [this](T val) {
                     m_current_snapshot = val;
@@ -28,10 +28,20 @@ template <typename T> class CCache {
         void seed( T val ) { m_current_snapshot = val; }
         void set_on_updated( std::function<void( const T& )> fn ) { m_on_updated = fn; }
 
+        float progress() {
+            if ( !m_task_handle.has_value( ) ) return 0.0f;
+            else
+                return m_task_handle->progress( );
+        }
+        void request_cancel( ) {
+            if ( m_task_handle ) m_task_handle->request_cancel( );
+        }
+
     private:
         T m_current_snapshot = { };
         std::atomic<bool> m_is_refreshing = false;
         std::function<void( const T& )> m_on_updated;
 
         CTaskRunner m_taskrunner;
+        std::optional<TaskHandle> m_task_handle;
 };

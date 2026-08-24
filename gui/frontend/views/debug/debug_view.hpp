@@ -10,6 +10,7 @@ class CDebugView : public CBaseView {
 
     private:
         CTaskRunner m_task_runner;
+        std::optional<TaskHandle> m_task_handle;
 
         std::ifstream m_file;
         std::string m_file_path;

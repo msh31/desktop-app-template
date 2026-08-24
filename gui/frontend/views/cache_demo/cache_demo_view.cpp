@@ -1,12 +1,12 @@
 #include "cache_demo_view.hpp"
-#include <utils/paths.hpp>
-
 #include <frontend/childguard.hpp>
-#include <frontend/components/spinner.hpp>
 
 void CCacheDemoView::on_enter( ) {
-    m_cache.refresh( [this] {
-        std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
+    m_cache.refresh( [this]( TaskControl& control ) {
+        for ( int i = 0; i < 5; i++ ) {
+            std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) );
+            control.progress.store( ( i + 1 ) / 5.0f );
+        }
         return m_seed_data;
     } );
 };
@@ -19,7 +19,7 @@ void CCacheDemoView::render( ) {
         ChildGuard memcache("memcache", { 0.0f, 0.0f });
         ImGui::Text( "Memory Cache Demo | Using a fake timer to simulate the work" );
         if ( m_cache.is_refreshing( ) ) {
-            Spinner::render( );
+            ImGui::ProgressBar( m_cache.progress( ) );
         } else {
             for ( const auto& entry : mem_cache ) {
                 ImGui::TextColored( ImColor( 49, 206, 234 ).Value, "Item Name: %s", entry.name.c_str( ) );
@@ -44,11 +44,19 @@ void CCacheDemoView::render( ) {
         ImGui::Text( "Disk Cache Demo | Using a fake timer to simulate the work" );
 
         if ( m_disk_cache.is_refreshing( ) ) {
-            Spinner::render( );
+            ImGui::ProgressBar( m_disk_cache.progress( ) );
+
+            if ( ImGui::Button( "Cancel" ) ) {
+                m_disk_cache.request_cancel( );
+            }
         } else {
             if ( ImGui::Button( "Refresh" ) ) {
-                m_disk_cache.refresh( [this] {
-                    std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
+                m_disk_cache.refresh( [this]( TaskControl& control ) {
+                    for ( int i = 0; i < 5; i++ ) {
+                        if ( control.cancel_requested.load( ) ) throw TaskCancelled{ };
+                        std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) );
+                        control.progress.store( ( i + 1 ) / 5.0f );
+                    }
                     return m_seed_data;
                 } );
             }
