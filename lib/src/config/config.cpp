@@ -4,7 +4,9 @@
  */
 
 #include <config/config.hpp>
+#include <utils/utils.hpp>
 #include <logger.hpp>
+
 #include <nlohmann/json.hpp>
 
 using json = nlohmann::json;
@@ -50,9 +52,8 @@ void CConfig::save( ) {
     data["window_w"] = settings.window_w;
     data["window_h"] = settings.window_h;
 
-    std::ofstream file( m_config_file );
-    file << data.dump( 4 );
-    file.close( );
+    bool res = utils::atomic_write( m_config_file, data.dump( 4 ) );
+    if ( !res ) SPDLOG_ERROR( "[Config] Failed to save config!" );
 }
 
 void CConfig::load( ) {

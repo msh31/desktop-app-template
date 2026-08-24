@@ -95,4 +95,44 @@ namespace utils { //All functions in this namespace should work across Windows, 
         if ( size >= KB ) return std::format( "{:.2f}KB", static_cast<double>( size ) / KB );
         return std::format( "{}B", size );
     }
+
+    // simply writes the contents to a tmp file and flushes the contents onto the drive
+    static bool atomic_write(const fs::path& path, const std::string& content) {
+        if ( fs::is_directory( path ) ) return false;
+
+        std::string tmp_path = path.string( ) + ".tmp";
+        std::ofstream file( tmp_path );
+        if ( !file.is_open( ) ) {
+            SPDLOG_ERROR( "[AtomicWrite]: failed to open temp file for writing!" );
+            return false;
+        }
+
+        file << content.data();
+        if ( !file.good( ) ) {
+            SPDLOG_ERROR( "[AtomicWrite]: failed to write to temp file!" );
+            return false;
+        }
+
+        if ( !file.flush( ) ) {
+            SPDLOG_ERROR( "[AtomicWrite]: failed to flush content to disk!" );
+            return false;
+        }
+
+        file.close( );
+
+        std::error_code ec;
+        fs::rename( tmp_path, path, ec );
+
+        if ( ec ) {
+            SPDLOG_ERROR( "[AtomicWrite]: {}", ec.message() );
+
+            std::error_code ecr;
+            fs::remove( tmp_path, ecr );
+            if ( ecr ) SPDLOG_ERROR( "[AtomicWrite]: {}", ecr.message() );
+
+            return false;
+        }
+
+        return true;
+    }
 }

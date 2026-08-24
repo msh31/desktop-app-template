@@ -1,5 +1,6 @@
 #pragma once
 #include "cache.hpp"
+#include <utils/utils.hpp>
 
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
@@ -43,17 +44,7 @@ template <typename T> class CDiskCache {
 
         bool save( const T& val ) {
             json data = val;
-            std::ofstream file( m_file );
-            if ( !file.is_open( ) ) {
-                SPDLOG_ERROR( "[DiskCache]: Failed to open cache file for writing: {}", m_file.string( ) );
-                return false;
-            }
-            file << data.dump( 4 );
-            if ( !file.good( ) ) {
-                SPDLOG_ERROR( "[DiskCache]: Failed to write cache file, disk might be full!" );
-                return false;
-            }
-            return true;
+            return utils::atomic_write( m_file, data.dump( 4 ) );
         }
 
         void refresh( std::function<T( TaskControl& )> fun ) { m_cache.refresh( fun ); }
