@@ -18,7 +18,10 @@ template <typename T> class CCache {
                     m_is_refreshing = false;
                     if ( m_on_updated ) m_on_updated( m_current_snapshot );
                 },
-                []( const std::exception& ex ) { SPDLOG_ERROR( "Cache Refresh Error: {}", ex.what( ) ); } );
+                [this]( const std::exception& ex ) {
+                    SPDLOG_ERROR( "Cache Refresh Error: {}", ex.what( ) );
+                    m_is_refreshing = false;
+                } );
         }
         const T& get( ) {
             m_taskrunner.update( );
