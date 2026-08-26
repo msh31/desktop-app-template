@@ -1,4 +1,5 @@
 #pragma once
+#include <array>
 
 namespace utils {
     inline constexpr std::array<std::string_view, 12> IMAGE_EXTENSIONS = {
