@@ -87,7 +87,7 @@ void CWindowManager::setup_opengl( ) {
         throw std::runtime_error( "Failed to initialize GLFW" );
     }
 
-    //OpenGL 3.3 Core
+    // OpenGL 3.3 Core
     glfwWindowHint( GLFW_CONTEXT_VERSION_MAJOR, 3 );
     glfwWindowHint( GLFW_CONTEXT_VERSION_MINOR, 3 );
     glfwWindowHint( GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE );
@@ -113,15 +113,15 @@ void CWindowManager::setup_opengl( ) {
         throw std::runtime_error( "[WindowManager] Failed to create window!" );
     }
 
-    #if defined( _WIN32 )
+#if defined( _WIN32 )
     BOOL dark_mode = m_config.settings.dark_mode;
     DwmSetWindowAttribute(
         glfwGetWin32Window( m_window ), DWMWA_USE_IMMERSIVE_DARK_MODE, &dark_mode, sizeof( dark_mode ) );
-    #endif
+#endif
 
     glfwSetWindowSizeLimits( m_window, kMinWindowW, kMinWindowH, GLFW_DONT_CARE, GLFW_DONT_CARE );
     glfwMakeContextCurrent( m_window );
-    glfwSwapInterval( 1 ); //vsync
+    glfwSwapInterval( 1 ); // vsync
     if ( !gladLoadGL( glfwGetProcAddress ) ) {
         throw std::runtime_error( "Failed to initialize GLAD!" );
     }
@@ -135,6 +135,10 @@ void CWindowManager::remember_window_size( ) {
 }
 
 void CWindowManager::apply_content_scale( float scale ) {
+#if defined( __APPLE__ )
+    // IMPORTANT: macOS resizes teh framebuffer than the window like macOS causing double scaling
+    return;
+#endif
     m_content_scale = scale;
     ThemeManager::apply_scale( scale );
     ImGui::GetStyle( ).FontScaleDpi = scale;
@@ -158,7 +162,7 @@ void CWindowManager::setup_imgui( ) {
     } );
 
     glfwSetWindowRefreshCallback( m_window, []( GLFWwindow* window ) {
-        static_cast<CWindowManager*>( glfwGetWindowUserPointer( window ) )->render_frame( ); 
+        static_cast<CWindowManager*>( glfwGetWindowUserPointer( window ) )->render_frame( );
     } );
 
     float xscale = 1.0f, yscale = 1.0f;
