@@ -20,11 +20,11 @@ namespace paths {
 
     inline fs::path default_config_dir( ) {
 #if defined( __linux__ )
-        return home_dir( ) / ".config" / APP_NAME.data( );
+        return home_dir( ) / ".config" / APP_NAME;
 #elif defined( __APPLE__ )
-        return home_dir( ) / "Library" / "Application Support" / APP_NAME.data( );
+        return home_dir( ) / "Library" / "Application Support" / APP_NAME;
 #elif defined( _WIN32 )
-        return home_dir( ) / "AppData" / "Roaming" / APP_NAME.data( );
+        return home_dir( ) / "AppData" / "Roaming" / APP_NAME;
 #endif
     }
 
@@ -40,7 +40,7 @@ namespace paths {
     inline fs::path redirect_file( ) { return config_dir( ) / "cfg.redirect"; }
 
     inline fs::path log_dir( ) { return config_dir( ) / "logs"; }
-    inline fs::path log_file( ) { return log_dir( ) / std::format( "{}.log", APP_NAME.data( ) ); }
+    inline fs::path log_file( ) { return log_dir( ) / std::format( "{}.log", APP_NAME ); }
 
     inline fs::path cache_dir( ) { return config_dir( ) / "cache"; }
     inline fs::path backgrounds_dir( ) { return config_dir( ) / "backgrounds"; }

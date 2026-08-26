@@ -1,6 +1,6 @@
 #include <backend/app.hpp>
-#include <logger.hpp>
 #include <backend/window_manager/window_manager.hpp>
+#include <logger.hpp>
 
 #ifdef _WIN32 // forces Windows to treat the app as a GUI Application
     #pragma comment( linker, "/subsystem:windows /entry:mainCRTStartup" )
@@ -9,7 +9,7 @@
 int main( ) {
     try {
         setup_logger( );
-        SPDLOG_INFO( "==============={}===============", APP_NAME.data( ) );
+        SPDLOG_INFO( "==============={}===============", APP_NAME );
         CConfig config;
         CWindowManager window( config );
         CApp app( config );

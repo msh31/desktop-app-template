@@ -47,7 +47,7 @@ inline void setup_logger( ) {
                                                                                  // console window pop up - it shouldnt
     sinks.push_back( std::make_shared<spdlog::sinks::daily_file_sink_mt>( ( paths::log_file( ) ).string( ), 0, 0 ) );
 
-    auto app_logger = std::make_shared<spdlog::logger>( APP_NAME.data( ), sinks.begin( ), sinks.end( ) );
+    auto app_logger = std::make_shared<spdlog::logger>( APP_NAME, sinks.begin( ), sinks.end( ) );
     spdlog::set_default_logger( app_logger );
 }
 

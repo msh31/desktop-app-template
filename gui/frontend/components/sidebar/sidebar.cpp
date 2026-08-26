@@ -20,7 +20,7 @@ CBaseView* CSideBar::render( CBaseView* active ) {
         ImGui::PopID( );
         ImGui::SameLine( );
         ImGui::PushFont( CFontManager::get( ).get_font( "jbm_reg_xl" ).value_or( nullptr ) );
-        ImGui::TextDisabled( "%s", APP_NAME.data( ) );
+        ImGui::TextDisabled( "%s", APP_NAME );
         ImGui::PopFont( );
     }
 

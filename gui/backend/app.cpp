@@ -56,7 +56,7 @@ void CApp::init( ) {
 
     SPDLOG_INFO( "Setting up statusbar.." );
     m_statusbar.add_left( { "I am a statusbar", "X" } );
-    m_statusbar.add_right( { "Build", APP_VERSION.data( ) } );
+    m_statusbar.add_right( { "Build", APP_VERSION } );
     m_ui_manager.set_statusbar( std::move( m_statusbar ) );
 }
 

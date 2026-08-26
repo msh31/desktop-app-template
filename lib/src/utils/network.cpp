@@ -1,27 +1,25 @@
-#include <utils/network.hpp>
 #include <branding.hpp>
+#include <charconv>
 #include <curl/curl.h>
-#include <string>
-#include <filesystem>
 #include <logger.hpp>
 #include <nlohmann/json.hpp>
-#include <charconv>
+#include <utils/network.hpp>
 
 namespace fs = std::filesystem;
 
 using json = nlohmann::json;
-using curl_handle = std::unique_ptr<CURL, decltype(&curl_easy_cleanup)>;
+using curl_handle = std::unique_ptr<CURL, decltype( &curl_easy_cleanup )>;
 
-curl_handle make_easy_handle(std::string_view url) {
+curl_handle make_easy_handle( const char* url ) {
     curl_handle handle( curl_easy_init( ), &curl_easy_cleanup );
     if ( !handle ) {
         SPDLOG_ERROR( "[Network] Failed to initialize CURL" );
         return handle;
     }
     curl_easy_setopt( handle.get( ), CURLOPT_USERAGENT, APP_NAME );
-    curl_easy_setopt( handle.get( ), CURLOPT_URL, std::string(url).c_str( ) );
-    curl_easy_setopt( handle.get( ), CURLOPT_TIMEOUT, 30L ); //compelte within 30sec
-    curl_easy_setopt( handle.get( ), CURLOPT_CONNECTTIMEOUT, 10L );  // connect within 10sec
+    curl_easy_setopt( handle.get( ), CURLOPT_URL, url );
+    curl_easy_setopt( handle.get( ), CURLOPT_TIMEOUT, 30L );        // compelte within 30sec
+    curl_easy_setopt( handle.get( ), CURLOPT_CONNECTTIMEOUT, 10L ); // connect within 10sec
     return handle;
 }
 
@@ -34,7 +32,7 @@ size_t Network::stream_callback( void* ptr, size_t size, size_t nmemb, FILE* str
     return size * nmemb;
 }
 
-bool Network::download_file( std::string_view url, const std::string& output_path ) {
+bool Network::download_file( const char* url, const std::string& output_path ) {
     auto handle = make_easy_handle( url );
     if ( !handle ) return { };
 
@@ -69,7 +67,7 @@ bool Network::download_file( std::string_view url, const std::string& output_pat
     return true;
 }
 
-std::string Network::download_to_string( std::string_view url ) {
+std::string Network::download_to_string( const char* url ) {
     auto handle = make_easy_handle( url );
     if ( !handle ) return { };
 
@@ -105,7 +103,7 @@ std::tuple<int, int, int> Network::parse_version( std::string_view v ) {
 
 bool Network::is_update_available( ) {
     json data;
-    std::string upstream =Network:: download_to_string( update_url );
+    std::string upstream = Network::download_to_string( update_url );
 
     if ( upstream.empty( ) ) {
         SPDLOG_ERROR( "[Network] Failed to get connect to GitHub API to fetch the latest version" );
