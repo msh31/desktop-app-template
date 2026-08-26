@@ -48,14 +48,15 @@ void CDebugView::render( ) {
                 []( const std::exception& ex ) { Notify::show_notification( "Error", ex.what( ), 5000 ); } );
         }
 
-        if ( m_task_handle ) {
+        if ( m_task_handle.has_value( ) ) {
             ImGui::SameLine( );
+            bool cancelled = false;
             if ( ImGui::Button( "Cancel" ) ) {
                 m_task_handle->request_cancel( );
-                m_task_handle = std::nullopt;
+                cancelled = true;
             }
-
-            ImGui::ProgressBar( m_task_handle->progress( ) );
+            if ( !cancelled ) ImGui::ProgressBar( m_task_handle->progress( ) );
+            if ( cancelled ) m_task_handle = std::nullopt;
         }
 
         ImGui::Separator( );
