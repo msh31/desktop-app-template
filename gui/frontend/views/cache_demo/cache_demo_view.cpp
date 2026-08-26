@@ -16,7 +16,7 @@ void CCacheDemoView::render( ) {
     auto dsk_cache = m_disk_cache.get( );
 
     {
-        ChildGuard memcache("memcache", { 0.0f, 0.0f });
+        ChildGuard memcache( "memcache", { 0.0f, 0.0f } );
         ImGui::Text( "Memory Cache Demo | Using a fake timer to simulate the work" );
         if ( m_cache.is_refreshing( ) ) {
             ImGui::ProgressBar( m_cache.progress( ) );
@@ -40,7 +40,7 @@ void CCacheDemoView::render( ) {
     ImGui::SameLine( );
 
     {
-        ChildGuard dskcache( "dskcache", { 0.0f, 0.0f });
+        ChildGuard dskcache( "dskcache", { 0.0f, 0.0f } );
         ImGui::Text( "Disk Cache Demo | Using a fake timer to simulate the work" );
 
         if ( m_disk_cache.is_refreshing( ) ) {
@@ -76,6 +76,6 @@ void CCacheDemoView::render( ) {
             }
         }
     }
-    }
+}
 
 void CCacheDemoView::on_exit( ) {}

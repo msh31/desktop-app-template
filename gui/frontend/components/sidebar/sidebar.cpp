@@ -1,6 +1,6 @@
 #include "sidebar.hpp"
-#include <branding.hpp>
 #include <backend/font_manager/font_manager.hpp>
+#include <branding.hpp>
 #include <frontend/childguard.hpp>
 #include <frontend/icons.hpp>
 
@@ -38,19 +38,19 @@ CBaseView* CSideBar::render( CBaseView* active ) {
     for ( const auto& item : m_items ) {
         auto label = item.label;
         if ( collapsed ) label = "";
-        if ( nav_button( item.icon, label, item.view == active, ImVec2(content_w, 0 )) ) {
+        if ( nav_button( item.icon, label, item.view == active, ImVec2( content_w, 0 ) ) ) {
             r_item = item.view;
             break;
         }
         if ( collapsed ) ImGui::SetItemTooltip( "%s", item.label );
     }
 
-    auto avail = ImGui::GetContentRegionAvail();
+    auto avail = ImGui::GetContentRegionAvail( );
     ImGui::Dummy( ImVec2( avail.x, avail.y - 40.0f ) );
 
     ImGui::PushStyleVar( ImGuiStyleVar_ButtonTextAlign, ImVec2( 0.0f, 0.5f ) );
     std::string str = std::format( "{}{}", ICON_GEAR, " Settings" );
-    if ( collapsed ) str = std::string(ICON_GEAR);
+    if ( collapsed ) str = std::string( ICON_GEAR );
     if ( ImGui::Button( str.c_str( ), ImVec2( content_w, 0 ) ) ) {
         r_item = m_settings;
     }
@@ -73,9 +73,9 @@ bool CSideBar::nav_button( const char* icon, const char* label, bool active, ImV
     }
     ImGui::PushStyleVar( ImGuiStyleVar_ButtonTextAlign, ImVec2( 0.0f, 0.5f ) );
 
-    std::string str = std::format("{} {}", icon, label);
+    std::string str = std::format( "{} {}", icon, label );
     if ( collapsed ) str = icon;
-    bool clicked = ImGui::Button( str.c_str(), width );
+    bool clicked = ImGui::Button( str.c_str( ), width );
 
     ImGui::PopStyleVar( );
     if ( active ) ImGui::PopStyleColor( 3 );

@@ -16,7 +16,7 @@
 extern char** environ;
 #endif
 
-namespace utils { //All functions in this namespace should work across Windows, Linux and macOS
+namespace utils { // All functions in this namespace should work across Windows, Linux and macOS
     inline std::string get_username( ) {
 #if defined( __linux__ ) || defined( __APPLE__ )
         return std::getenv( "USER" );
@@ -97,7 +97,7 @@ namespace utils { //All functions in this namespace should work across Windows, 
     }
 
     // simply writes the contents to a tmp file and flushes the contents onto the drive
-    static bool atomic_write(const fs::path& path, const std::string& content) {
+    static bool atomic_write( const fs::path& path, const std::string& content ) {
         if ( fs::is_directory( path ) ) return false;
 
         std::string tmp_path = path.string( ) + ".tmp";
@@ -107,7 +107,7 @@ namespace utils { //All functions in this namespace should work across Windows, 
             return false;
         }
 
-        file << content.data();
+        file << content.data( );
         if ( !file.good( ) ) {
             SPDLOG_ERROR( "[AtomicWrite]: failed to write to temp file!" );
             return false;
@@ -124,15 +124,15 @@ namespace utils { //All functions in this namespace should work across Windows, 
         fs::rename( tmp_path, path, ec );
 
         if ( ec ) {
-            SPDLOG_ERROR( "[AtomicWrite]: {}", ec.message() );
+            SPDLOG_ERROR( "[AtomicWrite]: {}", ec.message( ) );
 
             std::error_code ecr;
             fs::remove( tmp_path, ecr );
-            if ( ecr ) SPDLOG_ERROR( "[AtomicWrite]: {}", ecr.message() );
+            if ( ecr ) SPDLOG_ERROR( "[AtomicWrite]: {}", ecr.message( ) );
 
             return false;
         }
 
         return true;
     }
-}
+} // namespace utils

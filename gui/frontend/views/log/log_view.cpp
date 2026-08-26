@@ -1,8 +1,8 @@
 #include "log_view.hpp"
 #include <logger.hpp>
 
-#include <frontend/notification/notification.hpp>
 #include <frontend/childguard.hpp>
+#include <frontend/notification/notification.hpp>
 
 void CLogView::render( ) {
     auto* sink = get_ringbuffer_sink( );

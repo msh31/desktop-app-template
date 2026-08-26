@@ -39,8 +39,9 @@ namespace ui {
     }
 
     // Two ways to fit an image into a rect it doesn't share an aspect ratio with.
-    // add_cover_image:   fills the rect completely, no distortion, crops whatever overflows (CSS background-size: cover).
-    // add_contain_image: shows the whole image with no distortion or cropping, letterboxed within the rect (CSS background-size: contain).
+    // add_cover_image:   fills the rect completely, no distortion, crops whatever overflows (CSS background-size:
+    // cover). add_contain_image: shows the whole image with no distortion or cropping, letterboxed within the rect (CSS
+    // background-size: contain).
     inline void add_cover_image(
         ImDrawList* draw_list, ImTextureID texture_id, ImVec2 p_min, ImVec2 p_max, float image_w, float image_h ) {
         if ( image_w <= 0.0f || image_h <= 0.0f ) return;

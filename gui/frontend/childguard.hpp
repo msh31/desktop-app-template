@@ -9,9 +9,7 @@ class ChildGuard {
             ImGuiWindowFlags window_flags = 0 ) {
             ImGui::BeginChild( str, size, child_flags, window_flags );
         }
-        ~ChildGuard( ) { 
-            ImGui::EndChild( ); 
-        }
+        ~ChildGuard( ) { ImGui::EndChild( ); }
 
         ChildGuard( const ChildGuard& ) = delete;
         ChildGuard& operator=( const ChildGuard& ) = delete;

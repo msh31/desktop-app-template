@@ -2,8 +2,8 @@
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 
-#include <config/config.hpp>
 #include <backend/font_manager/font_manager.hpp>
+#include <config/config.hpp>
 
 class CWindowManager {
     public:

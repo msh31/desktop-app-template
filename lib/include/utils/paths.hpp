@@ -36,7 +36,7 @@ namespace paths {
         return default_config_dir( );
     }
 
-    //redirects the config location if present - TODO: verify this
+    // redirects the config location if present - TODO: verify this
     inline fs::path redirect_file( ) { return config_dir( ) / "cfg.redirect"; }
 
     inline fs::path log_dir( ) { return config_dir( ) / "logs"; }
@@ -59,6 +59,6 @@ namespace paths {
             throw std::runtime_error( "USERPROFILE not set, how did you manage to do this?" );
         }
 #endif
-        return home_dir() / "Documents";
+        return home_dir( ) / "Documents";
     }
 }; // namespace paths

@@ -4,8 +4,8 @@
  */
 
 #include <config/config.hpp>
-#include <utils/utils.hpp>
 #include <logger.hpp>
+#include <utils/utils.hpp>
 
 #include <nlohmann/json.hpp>
 
@@ -20,7 +20,7 @@ CConfig::CConfig( fs::path config_dir ) : m_config_file( config_dir / "config.js
             save( );
         }
 
-        fs::create_directories( paths::backgrounds_dir( ));
+        fs::create_directories( paths::backgrounds_dir( ) );
 
         load( );
 

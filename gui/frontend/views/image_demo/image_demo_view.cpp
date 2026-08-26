@@ -6,7 +6,7 @@
 #include <frontend/ui.hpp>
 
 void CImageDemoView::on_enter( ) {
-	m_embedded = CImageManager::get( ).load_from_memory( pepe_png, pepe_png_len, "pepe" );
+    m_embedded = CImageManager::get( ).load_from_memory( pepe_png, pepe_png_len, "pepe" );
 };
 
 void CImageDemoView::render( ) {
@@ -48,6 +48,4 @@ void CImageDemoView::render( ) {
     }
 }
 
-void CImageDemoView::on_exit( ) {
-    m_embedded = {};
-}
+void CImageDemoView::on_exit( ) { m_embedded = { }; }

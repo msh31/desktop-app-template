@@ -10,7 +10,7 @@ template <typename T> class CDiskCache {
         CCache<T> m_cache;
         fs::path m_file;
 
-        CDiskCache(fs::path cache) {
+        CDiskCache( fs::path cache ) {
             m_file = cache;
             m_cache.set_on_updated( [this]( const T& val ) { save( val ); } );
             if ( !load( ) ) {
@@ -19,7 +19,7 @@ template <typename T> class CDiskCache {
             }
         }
 
-        bool load() {
+        bool load( ) {
             if ( !fs::exists( m_file ) ) {
                 SPDLOG_ERROR( "[DiskCache]: The provided path does not exist!" );
                 return false;
@@ -50,11 +50,11 @@ template <typename T> class CDiskCache {
         void refresh( std::function<T( TaskControl& )> fun ) { m_cache.refresh( fun ); }
 
         const T& get( ) { return m_cache.get( ); }
-        bool is_refreshing( ) { return m_cache.is_refreshing(); }
+        bool is_refreshing( ) { return m_cache.is_refreshing( ); }
 
         float progress( ) { return m_cache.progress( ); }
         void request_cancel( ) { m_cache.request_cancel( ); }
 
     private:
-        //T m_current_snapshot = { };
+        // T m_current_snapshot = { };
 };

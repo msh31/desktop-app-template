@@ -5,9 +5,9 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
-ImageData CImageManager::load_from_disk( const fs::path& path, const std::string& name ){
+ImageData CImageManager::load_from_disk( const fs::path& path, const std::string& name ) {
     ImageData img;
-    int channels = 0; //discarded
+    int channels = 0; // discarded
     auto loaded_image = stbi_load( path.string( ).c_str( ), &img.texture_width, &img.texture_height, &channels, 4 );
 
     if ( loaded_image == nullptr ) {
@@ -23,7 +23,7 @@ ImageData CImageManager::load_from_memory( void* data, int length, const std::st
     int channels = 0;
 
     auto loaded_image = stbi_load_from_memory(
-        static_cast<const unsigned char*>( data), length, &img.texture_width, &img.texture_height, &channels, 4 );
+        static_cast<const unsigned char*>( data ), length, &img.texture_width, &img.texture_height, &channels, 4 );
 
     if ( loaded_image == nullptr ) {
         SPDLOG_ERROR( "[ImageManager]: Failed to load image from memory: {}", name );
@@ -33,7 +33,7 @@ ImageData CImageManager::load_from_memory( void* data, int length, const std::st
     return upload( loaded_image, img.texture_width, img.texture_height, name );
 }
 
-ImageData CImageManager::upload(const unsigned char* pixels, int width, int height, const std::string& name) {
+ImageData CImageManager::upload( const unsigned char* pixels, int width, int height, const std::string& name ) {
     ImageData img;
     img.texture_width = width;
     img.texture_height = height;
@@ -55,12 +55,12 @@ ImageData CImageManager::upload(const unsigned char* pixels, int width, int heig
     glTexImage2D(
         GL_TEXTURE_2D, 0, GL_RGBA, img.texture_width, img.texture_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels );
 
-    stbi_image_free( (void*)pixels  );
+    stbi_image_free( (void*)pixels );
     m_images[name] = img;
     return img;
 }
 
-ImageData CImageManager::get_image( const std::string& img_name ) { 
+ImageData CImageManager::get_image( const std::string& img_name ) {
     if ( auto it = m_images.find( img_name ); it != m_images.end( ) ) {
         return it->second;
     }

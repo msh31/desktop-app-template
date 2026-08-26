@@ -1,17 +1,18 @@
 #include "settings_view.hpp"
-#include <utils/utils.hpp>
 #include <utils/image_extensions.hpp>
+#include <utils/utils.hpp>
 
-#include <frontend/theme/theme.hpp>
 #include <frontend/childguard.hpp>
 #include <frontend/notification/notification.hpp>
+#include <frontend/theme/theme.hpp>
 
 CSettingsView::CSettingsView( CConfig& cfg ) : m_config( cfg ) {};
 
-void CSettingsView::on_enter() {
+void CSettingsView::on_enter( ) {
     m_backgrounds.clear( );
 
-    for ( const auto& f : fs::directory_iterator( paths::backgrounds_dir( ), fs::directory_options::skip_permission_denied ) ) {
+    for ( const auto& f :
+          fs::directory_iterator( paths::backgrounds_dir( ), fs::directory_options::skip_permission_denied ) ) {
         if ( f.is_regular_file( ) && utils::is_image_file( f.path( ) ) ) {
             m_backgrounds.emplace_back( f.path( ).filename( ).string( ) );
         }
@@ -39,7 +40,8 @@ void CSettingsView::render( ) {
 
         ImGui::Checkbox( "Use Shader", &test );
 
-        const char* items[] = { "Apple", "Banana", "Cherry", "Kiwi", "Mango", "Orange", "Pineapple", "Strawberry", "Watermelon" };
+        const char* items[] = { "Apple",  "Banana",    "Cherry",     "Kiwi",      "Mango",
+                                "Orange", "Pineapple", "Strawberry", "Watermelon" };
         static int item_current = 1;
         ImGui::ListBox( "##shader_list", &item_current, items, IM_COUNTOF( items ), 4 );
 
@@ -85,8 +87,6 @@ void CSettingsView::render( ) {
     }
 }
 
-void CSettingsView::on_exit( ) {
-    m_backgrounds.clear();
-}
+void CSettingsView::on_exit( ) { m_backgrounds.clear( ); }
 
 CSettingsView::~CSettingsView( ) {}

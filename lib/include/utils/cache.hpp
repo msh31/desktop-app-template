@@ -13,7 +13,7 @@ template <typename T> class CCache {
 
             m_task_handle = m_taskrunner.run<T>(
                 fun,
-                [this](T val) {
+                [this]( T val ) {
                     m_current_snapshot = val;
                     m_is_refreshing = false;
                     if ( m_on_updated ) m_on_updated( m_current_snapshot );
@@ -31,7 +31,7 @@ template <typename T> class CCache {
         void seed( T val ) { m_current_snapshot = val; }
         void set_on_updated( std::function<void( const T& )> fn ) { m_on_updated = fn; }
 
-        float progress() {
+        float progress( ) {
             if ( !m_task_handle.has_value( ) ) return 0.0f;
             else
                 return m_task_handle->progress( );

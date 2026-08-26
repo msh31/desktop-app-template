@@ -1,6 +1,6 @@
 #include "debug_view.hpp"
-#include <utils/utils.hpp>
 #include <nfd.h>
+#include <utils/utils.hpp>
 
 #include <frontend/childguard.hpp>
 
@@ -45,16 +45,14 @@ void CDebugView::render( ) {
                     Notify::show_notification( "Async", "Task complete!", 2000 );
                     m_task_handle = std::nullopt;
                 },
-                []( const std::exception& ex ) {
-                    Notify::show_notification( "Error", ex.what( ), 5000 );
-                } );
+                []( const std::exception& ex ) { Notify::show_notification( "Error", ex.what( ), 5000 ); } );
         }
 
         if ( m_task_handle ) {
             ImGui::SameLine( );
             if ( ImGui::Button( "Cancel" ) ) {
-                 m_task_handle->request_cancel( );
-                 m_task_handle = std::nullopt;
+                m_task_handle->request_cancel( );
+                m_task_handle = std::nullopt;
             }
 
             ImGui::ProgressBar( m_task_handle->progress( ) );
@@ -69,7 +67,6 @@ void CDebugView::render( ) {
         ChildGuard scaling( "scaling", { 0.0f, 0.0f }, ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY );
         ImGui::Text( "Scaling" );
 
-        
         if ( ImGui::Button( "Set scale to 2.0x" ) ) {
             ThemeManager::apply_scale( 2.0f );
         }
@@ -91,10 +88,10 @@ void CDebugView::render( ) {
             NFD_Init( );
 
             nfdu8char_t* outPath;
-            //nfdu8filteritem_t filters[1] = { { "GTA SAN ANDREAS SAVE FILE", "b" } };
-            //nfdopendialogu8args_t args = { 0 };
-            //args.filterList = filters;
-            //args.filterCount = 1;
+            // nfdu8filteritem_t filters[1] = { { "GTA SAN ANDREAS SAVE FILE", "b" } };
+            // nfdopendialogu8args_t args = { 0 };
+            // args.filterList = filters;
+            // args.filterCount = 1;
             nfdresult_t result = NFD_OpenDialogU8( &outPath, nullptr, 0, nullptr ); //_With( &outPath, &args );
             if ( result == NFD_OKAY ) {
                 std::string path( outPath );
@@ -130,15 +127,16 @@ void CDebugView::render( ) {
 
             ImGui::TextDisabled( "Filename: %s", m_file_name.c_str( ) );
             ImGui::TextDisabled( "Path: %s", m_file_path.c_str( ) );
-            ImGui::TextDisabled( "Size: %s",  m_file_size.c_str()); //path can never be a directory, guaranteed by the NFD dependency
+            ImGui::TextDisabled(
+                "Size: %s", m_file_size.c_str( ) ); // path can never be a directory, guaranteed by the NFD dependency
         }
     }
 }
 
-void CDebugView::on_exit() {
+void CDebugView::on_exit( ) {
     if ( m_file.is_open( ) ) {
         m_file.close( );
-            m_file_path.clear( );
+        m_file_path.clear( );
     }
 }
 

@@ -2,8 +2,7 @@
 
 namespace utils {
     inline constexpr std::array<std::string_view, 12> IMAGE_EXTENSIONS = {
-        ".png", ".jpg", ".jpeg", ".bmp", ".tga", ".psd", ".gif", ".hdr", ".pic", ".pnm", ".ppm", ".pgm"
-    };
+        ".png", ".jpg", ".jpeg", ".bmp", ".tga", ".psd", ".gif", ".hdr", ".pic", ".pnm", ".ppm", ".pgm" };
 
     inline bool is_image_file( const fs::path& path ) {
         auto ext = path.extension( ).string( );

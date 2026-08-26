@@ -17,15 +17,15 @@
     #include <regex>
     #include <stdexcept>
     #include <string>
+    #include <string_view>
     #include <thread>
     #include <unordered_set>
     #include <vector>
-    #include <string_view>
 
 namespace fs = std::filesystem;
 #endif
 
-//TODO: undo this mess
+// TODO: undo this mess
 #ifdef __linux__
     #include <sys/types.h>
     #include <sys/wait.h>
@@ -33,9 +33,9 @@ namespace fs = std::filesystem;
 #endif
 
 #ifdef _WIN32
-#define WIN32_LEAN_AND_MEAN
-#define NOMINMAX
-#include <Windows.h>
-#include <Psapi.h>
-#include <ShlObj_core.h>
+    #define WIN32_LEAN_AND_MEAN
+    #define NOMINMAX
+    #include <Psapi.h>
+    #include <ShlObj_core.h>
+    #include <Windows.h>
 #endif

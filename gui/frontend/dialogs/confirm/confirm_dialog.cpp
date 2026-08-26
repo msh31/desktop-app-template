@@ -16,7 +16,8 @@ void ConfirmDialog::render( ) {
     ImVec2 center = ImGui::GetMainViewport( )->GetCenter( );
     ImGui::SetNextWindowPos( center, ImGuiCond_Always, { 0.5f, 0.5f } );
     ImGui::SetNextWindowSize( { 200, 75 } );
-    if ( ImGui::BeginPopupModal( message.c_str( ), &p_open, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar ) ) {
+    if ( ImGui::BeginPopupModal(
+             message.c_str( ), &p_open, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar ) ) {
         ImGui::SetCursorPosX( ( ImGui::GetWindowWidth( ) - total ) * 0.5f );
         if ( ImGui::Button( "Yes", { btn_width, 0 } ) ) {
             fun( );
