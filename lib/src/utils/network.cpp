@@ -18,6 +18,7 @@ curl_handle make_easy_handle( const char* url ) {
     }
     curl_easy_setopt( handle.get( ), CURLOPT_USERAGENT, APP_NAME );
     curl_easy_setopt( handle.get( ), CURLOPT_URL, url );
+    curl_easy_setopt( handle.get( ), CURLOPT_NOSIGNAL, 1L ); //dns timeouts
     curl_easy_setopt( handle.get( ), CURLOPT_TIMEOUT, 30L );        // compelte within 30sec
     curl_easy_setopt( handle.get( ), CURLOPT_CONNECTTIMEOUT, 10L ); // connect within 10sec
     return handle;
