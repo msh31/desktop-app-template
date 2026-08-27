@@ -60,7 +60,12 @@ bool Network::download_file( const char* url, const std::string& output_path ) {
     fs::rename( tmp_path, output_path, ec );
     if ( ec ) {
         SPDLOG_ERROR( "[Network] Failed to move downloaded file into place: {}", ec.message( ) );
-        fs::remove( tmp_path );
+        std::error_code ecr;
+        fs::remove( tmp_path, ecr );
+        if ( ecr ) {
+            SPDLOG_ERROR( "[Network] Failed to remove the downloaded file during cleanup", ecr.message( ) );
+            return false;
+        }
         return false;
     }
 
