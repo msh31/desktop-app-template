@@ -21,10 +21,14 @@ void ConfirmDialog::render( ) {
         ImGui::SetCursorPosX( ( ImGui::GetWindowWidth( ) - total ) * 0.5f );
         if ( ImGui::Button( "Yes", { btn_width, 0 } ) ) {
             fun( );
+            fun = nullptr;
             ImGui::CloseCurrentPopup( );
         }
         ImGui::SameLine( );
-        if ( ImGui::Button( "No", { btn_width, 0 } ) ) ImGui::CloseCurrentPopup( );
+        if ( ImGui::Button( "No", { btn_width, 0 } ) ) {
+            fun = nullptr;
+            ImGui::CloseCurrentPopup( );
+        }
         ImGui::EndPopup( );
     }
 }
