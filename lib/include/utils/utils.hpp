@@ -105,20 +105,29 @@ namespace utils { // All functions in this namespace should work across Windows,
         if ( fs::is_directory( path ) ) return false;
 
         std::string tmp_path = path.string( ) + ".tmp";
-        std::ofstream file( tmp_path );
+        std::ofstream file( tmp_path, std::ios::binary );
         if ( !file.is_open( ) ) {
             SPDLOG_ERROR( "[AtomicWrite]: failed to open temp file for writing!" );
             return false;
         }
 
-        file << content.data( );
+        auto cleanup = [&file]( fs::path cpath ) {
+            file.close( );
+            std::error_code ecr;
+            fs::remove( cpath, ecr );
+            if ( ecr ) SPDLOG_ERROR( "[AtomicWrite]: {}", ecr.message( ) );
+        };
+
+        file.write( content.data( ), content.size( ) );
         if ( !file.good( ) ) {
             SPDLOG_ERROR( "[AtomicWrite]: failed to write to temp file!" );
+            cleanup( tmp_path );
             return false;
         }
 
         if ( !file.flush( ) ) {
             SPDLOG_ERROR( "[AtomicWrite]: failed to flush content to disk!" );
+            cleanup( tmp_path );
             return false;
         }
 
@@ -129,11 +138,7 @@ namespace utils { // All functions in this namespace should work across Windows,
 
         if ( ec ) {
             SPDLOG_ERROR( "[AtomicWrite]: {}", ec.message( ) );
-
-            std::error_code ecr;
-            fs::remove( tmp_path, ecr );
-            if ( ecr ) SPDLOG_ERROR( "[AtomicWrite]: {}", ecr.message( ) );
-
+            cleanup( tmp_path );
             return false;
         }
 
