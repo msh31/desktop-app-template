@@ -5,7 +5,7 @@ void CTextPipeline::build( ) {
 
     if ( m_lowercase ) {
         m_stages.push_back( []( std::string s ) -> std::expected<std::string, PipelineError> {
-            std::transform( s.begin( ), s.end( ), s.begin( ), ::tolower );
+            std::transform(s.begin( ), s.end( ), s.begin( ), []( unsigned char c ) { return std::tolower( c ); } );
             return s;
         } );
     }
