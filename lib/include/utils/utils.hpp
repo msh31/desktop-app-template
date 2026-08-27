@@ -18,11 +18,15 @@ extern char** environ;
 
 namespace utils { // All functions in this namespace should work across Windows, Linux and macOS
     inline std::string get_username( ) {
+        const char* usrname = nullptr;
+
 #if defined( __linux__ ) || defined( __APPLE__ )
-        return std::getenv( "USER" );
+        usrname = std::getenv( "USER" );
 #else
-        return std::getenv( "USERNAME" );
+        usrname = std::getenv( "USERNAME" );
 #endif
+        if ( !usrname ) throw std::runtime_error( "USER not set, how did you manage to do this?" );
+        return std::string( usrname );
     }
 
     inline void open_in_file_manager( const char* path ) {
