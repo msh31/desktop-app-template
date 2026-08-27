@@ -92,7 +92,10 @@ std::tuple<int, int, int> Network::parse_version( std::string_view v ) {
 
     int i = 0;
     while ( std::getline( ss, segment, '.' ) && i < 3 ) {
-        if ( i == 0 ) segment.erase( 0, 1 ); // strip 'v'
+        
+        if ( i == 0 ) if ( segment.starts_with( 'v' ) ) segment.erase( 0, 1 ); // strip 'v'
+
+        //intentional discards of the results bedcause it will default to 0,0,0 anyway
         if ( i == 0 ) std::from_chars( segment.data( ), segment.data( ) + segment.size( ), major );
         if ( i == 1 ) std::from_chars( segment.data( ), segment.data( ) + segment.size( ), minor );
         if ( i == 2 ) std::from_chars( segment.data( ), segment.data( ) + segment.size( ), patch );
