@@ -34,7 +34,7 @@ size_t Network::stream_callback( char* ptr, size_t size, size_t nmemb, void* use
 
 bool Network::download_file( const char* url, const std::string& output_path ) {
     auto handle = make_easy_handle( url );
-    if ( !handle ) return { };
+    if ( !handle ) return false;
 
     std::string tmp_path = output_path + ".tmp";
     FILE* fp = fopen( tmp_path.c_str( ), "wb" );
