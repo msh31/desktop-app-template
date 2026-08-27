@@ -90,6 +90,20 @@ endif()
 [target.template_app.windows]
 link-libraries = ["Dwmapi"]
 
+# helper that does one operation with elevated permissions
+[target.template_elevationhelper]
+type = "executable"
+sources = [
+    "elevation/**.cpp",
+    "elevation/**.hpp",
+]
+include-directories = [
+    "elevation",
+]
+compile-features = ["cxx_std_23"]
+link-libraries = ["spdlog::spdlog", "template_lib"]
+precompile-headers = ["lib/include/lib_pch.hpp"]
+
 # tests
 [target.template_tests]
 type = "executable"

@@ -299,6 +299,39 @@ if(WIN32)
   set(CURL_USE_SCHANNEL ON)
 endif()
 
+# Target: template_elevationhelper
+set(template_elevationhelper_SOURCES
+	cmake.toml
+	"elevation/main.cpp"
+)
+
+add_executable(template_elevationhelper)
+
+target_sources(template_elevationhelper PRIVATE ${template_elevationhelper_SOURCES})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${template_elevationhelper_SOURCES})
+
+target_compile_features(template_elevationhelper PRIVATE
+	cxx_std_23
+)
+
+target_include_directories(template_elevationhelper PRIVATE
+	elevation
+)
+
+target_link_libraries(template_elevationhelper PRIVATE
+	spdlog::spdlog
+	template_lib
+)
+
+target_precompile_headers(template_elevationhelper PRIVATE
+	"lib/include/lib_pch.hpp"
+)
+
+get_directory_property(CMKR_VS_STARTUP_PROJECT DIRECTORY ${PROJECT_SOURCE_DIR} DEFINITION VS_STARTUP_PROJECT)
+if(NOT CMKR_VS_STARTUP_PROJECT)
+	set_property(DIRECTORY ${PROJECT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT template_elevationhelper)
+endif()
+
 # Target: template_tests
 set(template_tests_SOURCES
 	cmake.toml
