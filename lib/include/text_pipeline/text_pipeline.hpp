@@ -5,6 +5,7 @@ using Stage = std::function<std::expected<std::string, PipelineError>( std::stri
 
 class CTextPipeline {
     public:
+        CTextPipeline( ) = default;
         void build( );
         std::expected<std::string, PipelineError> run( std::string_view input );
 
