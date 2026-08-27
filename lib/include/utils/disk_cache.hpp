@@ -55,6 +55,11 @@ template <typename T> class CDiskCache {
         float progress( ) { return m_cache.progress( ); }
         void request_cancel( ) { m_cache.request_cancel( ); }
 
+        CDiskCache( const CDiskCache& ) = delete;
+        CDiskCache& operator=( const CDiskCache& ) = delete;
+        CDiskCache( CDiskCache&& ) = delete;
+        CDiskCache& operator=( CDiskCache&& ) = delete;
+
     private:
         // T m_current_snapshot = { };
 };

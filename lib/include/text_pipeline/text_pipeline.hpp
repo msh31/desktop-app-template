@@ -15,6 +15,11 @@ class CTextPipeline {
 
         bool m_is_built = false;
 
+        CTextPipeline( const CTextPipeline& ) = delete;
+        CTextPipeline& operator=( const CTextPipeline& ) = delete;
+        CTextPipeline( CTextPipeline&& ) = delete;
+        CTextPipeline& operator=( CTextPipeline&& ) = delete;
+
     private:
         std::vector<Stage> m_stages;
 
