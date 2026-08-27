@@ -82,6 +82,21 @@ static void error_callback( int error, const char* description ) {
     callback_error_triggered = true;
 }
 
+void CWindowManager::cleanup() {
+    if ( m_imgui_backend_init_gl3 ) {
+        ImGui_ImplOpenGL3_Shutdown( );
+    }
+    if ( m_imgui_backend_init ) {
+        ImGui_ImplGlfw_Shutdown( );
+    }
+    if ( m_imgui_ctx ) {
+        ImGui::DestroyContext( );
+    }
+    if ( m_window ) {
+        glfwTerminate( );
+    }
+}
+
 void CWindowManager::setup_opengl( ) {
     SPDLOG_INFO( "Setting up OpenGL.." );
     glfwSetErrorCallback( error_callback );
@@ -125,6 +140,7 @@ void CWindowManager::setup_opengl( ) {
     glfwMakeContextCurrent( m_window );
     glfwSwapInterval( 1 ); // vsync
     if ( !gladLoadGL( glfwGetProcAddress ) ) {
+        cleanup( );
         throw std::runtime_error( "Failed to initialize GLAD!" );
     }
 }
@@ -148,7 +164,7 @@ void CWindowManager::apply_content_scale( float scale ) {
 
 void CWindowManager::setup_imgui( ) {
     SPDLOG_INFO( "Setting up ImGui.." );
-    ImGui::CreateContext( );
+    m_imgui_ctx = ImGui::CreateContext( );
 
     ImGuiIO& io = ImGui::GetIO( );
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
@@ -171,10 +187,14 @@ void CWindowManager::setup_imgui( ) {
     glfwGetWindowContentScale( m_window, &xscale, &yscale );
     apply_content_scale( xscale );
 
-    if ( !ImGui_ImplGlfw_InitForOpenGL( m_window, true ) ) {
+    m_imgui_backend_init = ImGui_ImplGlfw_InitForOpenGL( m_window, true );
+    if ( !m_imgui_backend_init ) {
+        cleanup( );
         throw std::runtime_error( "Failed to initialize ImGui for OpenGL" );
     }
-    if ( !ImGui_ImplOpenGL3_Init( ) ) {
+    m_imgui_backend_init_gl3 = ImGui_ImplOpenGL3_Init( );
+    if ( !m_imgui_backend_init_gl3 ) {
+        cleanup( );
         throw std::runtime_error( "Failed to initialize ImGui" );
     }
     ThemeManager::apply_colors( m_config.settings.dark_mode ? ThemeType::Dark : ThemeType::Light );

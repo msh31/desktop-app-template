@@ -11,15 +11,7 @@ class CWindowManager {
             setup_opengl( );
             setup_imgui( );
         }
-        ~CWindowManager( ) {
-            if ( m_window != nullptr ) {
-                ImGui_ImplOpenGL3_Shutdown( );
-                ImGui_ImplGlfw_Shutdown( );
-                ImGui::DestroyContext( );
-                glfwDestroyWindow( m_window );
-                glfwTerminate( );
-            }
-        }
+        ~CWindowManager( ) { cleanup( ); }
 
         void run( std::function<void( )> fun );
 
@@ -28,6 +20,11 @@ class CWindowManager {
         GLFWwindow* m_window = nullptr;
         float m_content_scale = 1.0f;
         std::function<void( )> m_render_fn;
+
+        ImGuiContext* m_imgui_ctx = nullptr;
+        bool m_imgui_backend_init_gl3 = false;
+        bool m_imgui_backend_init = false;
+        void cleanup( );
 
         void setup_opengl( );
         void setup_imgui( );
