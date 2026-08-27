@@ -12,8 +12,8 @@ void CCacheDemoView::on_enter( ) {
 };
 
 void CCacheDemoView::render( ) {
-    auto mem_cache = m_cache.get( );
-    auto dsk_cache = m_disk_cache.get( );
+    const auto& mem_cache = m_cache.get( );
+    const auto& dsk_cache = m_disk_cache.get( );
 
     {
         ChildGuard memcache( "memcache", { 0.0f, 0.0f } );
