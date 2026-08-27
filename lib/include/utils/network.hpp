@@ -5,8 +5,8 @@ namespace {
 }
 
 namespace Network {
-    size_t write_callback( void* ptr, size_t size, size_t nmemb, FILE* stream );
-    size_t stream_callback( void* ptr, size_t size, size_t nmemb, FILE* stream );
+    size_t write_callback( char* ptr, size_t size, size_t nmemb, void* stream );
+    size_t stream_callback( char* ptr, size_t size, size_t nmemb, void* userdata );
 
     bool download_file( const char* url, const std::string& output_path );
 

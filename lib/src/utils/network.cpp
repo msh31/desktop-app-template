@@ -24,12 +24,11 @@ curl_handle make_easy_handle( const char* url ) {
     return handle;
 }
 
-size_t Network::write_callback( void* ptr, size_t size, size_t nmemb, FILE* stream ) {
-    return fwrite( ptr, size, nmemb, stream ) * size;
+size_t Network::write_callback( char* ptr, size_t size, size_t nmemb, void* stream ) {
+    return fwrite( ptr, size, nmemb, (FILE*)stream ) * size;
 }
-size_t Network::stream_callback( void* ptr, size_t size, size_t nmemb, FILE* stream ) {
-    ( (std::string*)stream )->append( (char*)ptr, size * nmemb );
-
+size_t Network::stream_callback( char* ptr, size_t size, size_t nmemb, void* userdata ) {
+    ( (std::string*)userdata )->append( ptr, size * nmemb );
     return size * nmemb;
 }
 
