@@ -45,6 +45,8 @@ void CWindowManager::run( std::function<void( )> fun ) {
 }
 
 void CWindowManager::render_frame( ) {
+    if ( !m_render_fn ) return;
+
     glClear( GL_COLOR_BUFFER_BIT );
 
     ImGui_ImplOpenGL3_NewFrame( );
