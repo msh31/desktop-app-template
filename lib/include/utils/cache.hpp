@@ -7,9 +7,8 @@ template <typename T> class CCache {
         ~CCache( ) { m_taskrunner.shutdown( ); }
 
         void refresh( std::function<T( TaskControl& )> fun ) {
-            if ( m_is_refreshing ) return;
-
-            m_is_refreshing = true;
+            bool expected = false;
+            if ( !m_is_refreshing.compare_exchange_strong( expected, true ) ) return;
 
             m_task_handle = m_taskrunner.run<T>(
                 fun,
