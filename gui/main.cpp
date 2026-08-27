@@ -1,14 +1,17 @@
 #include <backend/app.hpp>
 #include <backend/window_manager/window_manager.hpp>
 #include <logger.hpp>
+#include <curl/curl.h>
 
 #ifdef _WIN32 // forces Windows to treat the app as a GUI Application
     #pragma comment( linker, "/subsystem:windows /entry:mainCRTStartup" )
 #endif
 
 int main( ) {
+    curl_global_init( CURL_GLOBAL_ALL );
     try {
         setup_logger( );
+
         SPDLOG_INFO( "==============={}===============", APP_NAME );
         CConfig config;
         CWindowManager window( config );
@@ -19,7 +22,10 @@ int main( ) {
         window.run( [&app] { app.render( ); } );
     } catch ( const std::exception& e ) {
         SPDLOG_CRITICAL( "Fatal: {}", e.what( ) );
+        curl_global_cleanup( );
         return 1;
     }
+
+    curl_global_cleanup( );
     return 0;
 }
