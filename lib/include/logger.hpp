@@ -41,11 +41,16 @@ inline std::shared_ptr<ringbuffer_sink_mt> g_ringbuffer_sink;
 
 inline void setup_logger( ) {
     g_ringbuffer_sink = std::make_shared<ringbuffer_sink_mt>( );
+#ifdef SPDLOG_WCHAR_FILENAMES
+    spdlog::filename_t log_path = paths::log_file( ).wstring( );
+#else
+    spdlog::filename_t log_path = paths::log_file( ).string( );
+#endif
 
     std::vector<spdlog::sink_ptr> sinks{ g_ringbuffer_sink };
     sinks.push_back( std::make_shared<spdlog::sinks::stdout_color_sink_mt>( ) ); // TODO: confirm this doesnt make a
                                                                                  // console window pop up - it shouldnt
-    sinks.push_back( std::make_shared<spdlog::sinks::daily_file_sink_mt>( ( paths::log_file( ) ).string( ), 0, 0 ) );
+    sinks.push_back( std::make_shared<spdlog::sinks::daily_file_sink_mt>( log_path, 0, 0 ) );
 
     auto app_logger = std::make_shared<spdlog::logger>( APP_NAME, sinks.begin( ), sinks.end( ) );
     spdlog::set_default_logger( app_logger );

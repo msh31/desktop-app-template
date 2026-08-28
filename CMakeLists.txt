@@ -48,6 +48,10 @@ if(APPLE) # apple
 
 endif()
 
+if(WIN32)
+  set(SPDLOG_WCHAR_FILENAMES ON)
+endif()
+
 include(FetchContent)
 
 # Fix warnings about DOWNLOAD_EXTRACT_TIMESTAMP

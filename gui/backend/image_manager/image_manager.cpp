@@ -8,13 +8,28 @@
 ImageData CImageManager::load_from_disk( const fs::path& path, const std::string& name ) {
     ImageData img;
     int channels = 0; // discarded
-    auto loaded_image = stbi_load( path.string( ).c_str( ), &img.texture_width, &img.texture_height, &channels, 4 );
 
-    if ( loaded_image == nullptr ) {
-        SPDLOG_ERROR( "[ImageManager]: Failed to load image from disk: {}", path.string( ).c_str( ) );
+    FILE* fp = nullptr;
+#if defined( _WIN32)
+    fp = _wfopen( path.c_str( ), L"rb" );
+#else
+    fp = fopen( path.c_str( ), "rb" );
+#endif
+
+    if ( !fp ) {
+        SPDLOG_ERROR( "[CImageManager]: failed to open file for loading: {}", path.filename( ).string() );
         return { };
     }
 
+    auto loaded_image = stbi_load_from_file( fp, &img.texture_width, &img.texture_height, &channels, 4 );
+
+    if ( loaded_image == nullptr ) {
+        SPDLOG_ERROR( "[ImageManager]: Failed to load image from disk: {}", path.string( ) );
+        fclose( fp );
+        return { };
+    }
+
+    fclose( fp );
     return upload( loaded_image, img.texture_width, img.texture_height, name );
 }
 

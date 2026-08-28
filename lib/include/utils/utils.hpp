@@ -104,7 +104,9 @@ namespace utils { // All functions in this namespace should work across Windows,
     static bool atomic_write( const fs::path& path, const std::string& content ) {
         if ( fs::is_directory( path ) ) return false;
 
-        std::string tmp_path = path.string( ) + ".tmp";
+        fs::path tmp_path = path;
+        tmp_path += ".tmp";
+
         std::ofstream file( tmp_path, std::ios::binary );
         if ( !file.is_open( ) ) {
             SPDLOG_ERROR( "[AtomicWrite]: failed to open temp file for writing!" );
@@ -137,7 +139,7 @@ namespace utils { // All functions in this namespace should work across Windows,
         fs::rename( tmp_path, path, ec );
 
         if ( ec ) {
-            SPDLOG_ERROR( "[AtomicWrite]: {}", ec.message( ) );
+            SPDLOG_ERROR( "[AtomicWrite]: rename error {}", ec.message( ) );
             cleanup( tmp_path );
             return false;
         }
