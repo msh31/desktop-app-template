@@ -22,5 +22,6 @@ class CConfig {
     private:
         fs::path m_config_file = paths::config_dir( ) / "config.json";
 
-        void load( );
+        bool load( );
+        bool m_load_ok = false;
 };
