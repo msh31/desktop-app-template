@@ -2,12 +2,12 @@
 #include <frontend/childguard.hpp>
 
 void CCacheDemoView::on_enter( ) {
-    m_cache.refresh( [this]( TaskControl& control ) {
+    m_cache.refresh( [seed = m_seed_data]( TaskControl& control ) mutable {
         for ( int i = 0; i < 5; i++ ) {
             std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) );
             control.progress.store( ( i + 1 ) / 5.0f );
         }
-        return m_seed_data;
+        return std::move( seed );
     } );
 };
 
@@ -51,13 +51,13 @@ void CCacheDemoView::render( ) {
             }
         } else {
             if ( ImGui::Button( "Refresh" ) ) {
-                m_disk_cache.refresh( [this]( TaskControl& control ) {
+                m_disk_cache.refresh( [seed = m_seed_data]( TaskControl& control ) mutable {
                     for ( int i = 0; i < 5; i++ ) {
                         if ( control.cancel_requested.load( ) ) throw TaskCancelled{ };
                         std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) );
                         control.progress.store( ( i + 1 ) / 5.0f );
                     }
-                    return m_seed_data;
+                    return std::move( seed );
                 } );
             }
 
