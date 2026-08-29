@@ -1,6 +1,8 @@
 #pragma once
 #include <backend/image_manager/image_manager.hpp>
 #include <backend/ui_manager/ui_manager.hpp>
+#include <async_queue/async_queue.hpp>
+
 #include <config/config.hpp>
 #include <utils/paths.hpp>
 
@@ -20,12 +22,13 @@ class CApp {
         void refresh_background( );
 
         CConfig& m_config;
+        CAsyncQueue m_queue;
+        std::optional<TaskHandle> m_task_handle;
+
         CUIManager m_ui_manager{ std::make_unique<CTabbarShell>( ) };
         // CUIManager m_ui_manager{ std::make_unique<CSidebarShell>( ) };
         //  CUIManager m_ui_manager{ std::make_unique<CNoShell>( ) }; // kinda sucks
         //  CUIManager m_ui_manager { std::make_unique<CRibbonShell>() };
-
-        bool m_toggle_a = false, m_toggle_b = false, m_toggle_c = true, m_toggle_d = false, m_toggle_e = false;
 
         CMenuBar m_menubar;
         CStatusBar m_statusbar;

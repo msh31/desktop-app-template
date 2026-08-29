@@ -19,9 +19,17 @@
 #include <frontend/notification/notification.hpp>
 
 void CApp::init( ) {
-    if ( Network::is_update_available( ) ) {
-        Notify::show_notification( "Update Check", "A new update is available to download!", 1500 );
-    }
+    m_task_handle = m_queue.run<bool>(
+        []( TaskControl& control ) {
+            if ( control.cancel_requested.load( ) ) throw TaskCancelled{ };
+            return Network::is_update_available( );
+        },
+        [this]( bool nva ) {
+            if ( nva ) Notify::show_notification( "Update Check", "A new update is available to download!", 1500 );
+            m_task_handle = std::nullopt;
+        },
+        []( const std::exception& ex ) { Notify::show_notification( "Error", ex.what( ), 5000 ); 
+    } );
 
     refresh_background( );
 
@@ -33,26 +41,6 @@ void CApp::init( ) {
     m_ui_manager.add_view( { std::make_unique<CImageDemoView>( ), ICON_IMAGE, "Image Demo" } );
     m_ui_manager.add_view( { std::make_unique<CLogView>( ), ICON_SCROLL, "Logs" } );
     m_ui_manager.set_settings_view( { std::make_unique<CSettingsView>( m_config ), ICON_GEAR, "Settings" } );
-
-    // SPDLOG_INFO( "Setting up the menubar.." );
-    // m_menubar.add_group(
-    //     { "File",
-    //       {
-    //           { ICON_NEW_FILE, "New", [] { Notify::show_notification( "File", "New", 1500 ); } },
-    //           { ICON_OPEN, "Open", [] { Notify::show_notification( "File", "Open", 1500 ); } },
-    //           { ICON_SAVE, "Save", [] { Notify::show_notification( "File", "Saved!", 1500 ); } },
-    //       } } );
-    // m_menubar.add_group(
-    //     { "Options",
-    //       {
-    //           { ICON_THEME, "Dark Mode", nullptr, &m_config.settings.dark_mode },
-    //           { ICON_TEST, "Feature A", nullptr, &m_toggle_a },
-    //           { ICON_TEST2, "Feature B", nullptr, &m_toggle_b },
-    //           { ICON_TEST3, "Feature C", nullptr, &m_toggle_c },
-    //           { ICON_TEST4, "Feature D", nullptr, &m_toggle_d },
-    //           { ICON_TEST5, "Feature E", nullptr, &m_toggle_e },
-    //       } } );
-    // m_ui_manager.set_menubar( std::move( m_menubar ) );
 
     SPDLOG_INFO( "Setting up statusbar.." );
     m_statusbar.add_left( { "I am a statusbar", "X" } );
@@ -81,6 +69,7 @@ void CApp::refresh_background( ) {
 
 void CApp::render( ) {
     refresh_background( );
+    m_queue.update( );
 
     bool use_bg = m_config.settings.use_bg;
 
