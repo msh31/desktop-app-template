@@ -21,7 +21,7 @@ class TaskHandle {
         std::shared_ptr<TaskControl> m_control;
 };
 
-class CTaskRunner {
+class CAsyncQueue {
     public:
         template <typename T>
         TaskHandle

@@ -153,11 +153,11 @@ target_link_libraries(imgui PUBLIC
 # Target: template_lib
 set(template_lib_SOURCES
 	cmake.toml
+	"lib/include/async_queue/async_queue.hpp"
 	"lib/include/branding.hpp"
 	"lib/include/config/config.hpp"
 	"lib/include/lib_pch.hpp"
 	"lib/include/logger.hpp"
-	"lib/include/task_runner/task_runner.hpp"
 	"lib/include/text_pipeline/text_pipeline.hpp"
 	"lib/include/types.hpp"
 	"lib/include/utils/cache.hpp"
@@ -166,8 +166,8 @@ set(template_lib_SOURCES
 	"lib/include/utils/network.hpp"
 	"lib/include/utils/paths.hpp"
 	"lib/include/utils/utils.hpp"
+	"lib/src/async_queue/async_queue.cpp"
 	"lib/src/config/config.cpp"
-	"lib/src/task_runner/task_runner.cpp"
 	"lib/src/text_pipeline/text_pipeline.cpp"
 	"lib/src/utils/network.cpp"
 )

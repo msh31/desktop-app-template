@@ -1,6 +1,6 @@
 #pragma once
 #include <frontend/views/base_view.hpp>
-#include <task_runner/task_runner.hpp>
+#include <async_queue/async_queue.hpp>
 
 class CDebugView : public CBaseView {
     public:
@@ -9,7 +9,7 @@ class CDebugView : public CBaseView {
         void on_exit( ) override;
 
     private:
-        CTaskRunner m_task_runner;
+        CAsyncQueue m_queue;
         std::optional<TaskHandle> m_task_handle;
 
         std::ifstream m_file;

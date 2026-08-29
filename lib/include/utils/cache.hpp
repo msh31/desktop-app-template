@@ -1,16 +1,16 @@
 #pragma once
 #include <logger.hpp>
-#include <task_runner/task_runner.hpp>
+#include <async_queue/async_queue.hpp>
 
 template <typename T> class CCache {
     public:
-        ~CCache( ) { m_taskrunner.shutdown( ); }
+        ~CCache( ) { m_queue.shutdown( ); }
 
         void refresh( std::function<T( TaskControl& )> fun ) {
             bool expected = false;
             if ( !m_is_refreshing.compare_exchange_strong( expected, true ) ) return;
 
-            m_task_handle = m_taskrunner.run<T>(
+            m_task_handle = m_queue.run<T>(
                 fun,
                 [this]( T val ) {
                     m_current_snapshot = val;
@@ -23,7 +23,7 @@ template <typename T> class CCache {
                 } );
         }
         const T& get( ) {
-            m_taskrunner.update( );
+            m_queue.update( );
             return m_current_snapshot;
         }
         bool is_refreshing( ) { return m_is_refreshing; }
@@ -44,6 +44,6 @@ template <typename T> class CCache {
         std::atomic<bool> m_is_refreshing = false;
         std::function<void( const T& )> m_on_updated;
 
-        CTaskRunner m_taskrunner;
+        CAsyncQueue m_queue;
         std::optional<TaskHandle> m_task_handle;
 };

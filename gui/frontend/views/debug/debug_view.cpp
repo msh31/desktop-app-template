@@ -9,7 +9,7 @@
 #include <frontend/theme/theme.hpp>
 
 void CDebugView::render( ) {
-    m_task_runner.update( ); // needs a refactor but fine for now | TODO: copy from SM
+    m_queue.update( );
 
     {
         ChildGuard buttons( "buttons", { 0.0f, 0.0f }, ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY );
@@ -32,7 +32,7 @@ void CDebugView::render( ) {
         }
 
         if ( ImGui::Button( "Test async task" ) ) {
-            m_task_handle = m_task_runner.run<int>(
+            m_task_handle = m_queue.run<int>(
                 []( TaskControl& control ) {
                     for ( int i = 0; i < 20; i++ ) {
                         if ( control.cancel_requested.load( ) ) throw TaskCancelled{ };
@@ -141,4 +141,4 @@ void CDebugView::on_exit( ) {
     }
 }
 
-CDebugView::~CDebugView( ) { m_task_runner.shutdown( ); }
+CDebugView::~CDebugView( ) { m_queue.shutdown( ); }
