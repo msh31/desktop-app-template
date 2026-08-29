@@ -1,23 +1,25 @@
 #include <async_queue/async_queue.hpp>
 
 void CAsyncQueue::update( ) {
-    std::erase_if( m_tasks, []( Task& t ) {
-        bool ready = false;
-        if ( t.future.valid( ) && t.future.wait_for( std::chrono::seconds( 0 ) ) == std::future_status::ready ) {
-            ready = true;
-        }
+    std::vector<Task> ready_tasks;
+
+    auto it = std::remove_if( m_tasks.begin( ), m_tasks.end( ), [&ready_tasks]( Task& t ) {
+        bool ready = t.future.valid( ) && t.future.wait_for( std::chrono::seconds( 0 ) ) == std::future_status::ready;
         if ( ready ) {
-            try {
-                t.future.get( );
-                t.on_complete( );
-                return true;
-            } catch ( const std::exception& ex ) {
-                t.on_error( ex );
-                return true;
-            }
+            ready_tasks.push_back( std::move( t ) );
         }
-        return false;
+        return ready;
     } );
+    m_tasks.erase( it, m_tasks.end( ) );
+
+    for ( auto& t : ready_tasks ) {
+        try {
+            t.future.get( );
+            t.on_complete( );
+        } catch ( const std::exception& ex ) {
+            t.on_error( ex );
+        }
+    }
 }
 
 // COMMENT: work runs on a background thread and may outlive the owning object on shutdown
