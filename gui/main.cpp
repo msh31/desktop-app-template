@@ -11,6 +11,7 @@ int main( ) {
     curl_global_init( CURL_GLOBAL_ALL );
     try {
         setup_logger( );
+        paths::set_config_dir( paths::exe_dir( ) / "config" );
 
         SPDLOG_INFO( "==============={}===============", APP_NAME );
         CConfig config;

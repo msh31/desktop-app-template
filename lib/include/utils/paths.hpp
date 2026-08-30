@@ -1,11 +1,39 @@
 #pragma once
 #include <branding.hpp>
 
+#if defined( __linux__ )
+#include <unistd.h>
+#include <climits>
+#elif defined( __APPLE__ )
+#include <mach-o/dyld.h>
+#include <climits>
+#endif
+
 namespace fs = std::filesystem;
 
 namespace paths {
     inline fs::path g_config_dir;
     inline void set_config_dir( const fs::path& p ) { g_config_dir = p; }
+
+    inline fs::path exe_dir() {
+#if defined( _WIN32 )
+        wchar_t szFileName[MAX_PATH];
+        GetModuleFileNameW( NULL, szFileName, MAX_PATH );
+        fs::path exe_path( szFileName );
+        return exe_path.parent_path( );
+#elif defined( __linux__ )
+        char buffer[PATH_MAX];
+        ssize_t len = readlink( "/proc/self/exe", buffer, sizeof( buffer ) - 1 );
+        if ( len == -1 ) throw std::runtime_error( "readlink /proc/self/exe failed" );
+        buffer[len] = '\0';
+        return fs::path( buffer );
+#elif defined( __APPLE__ )
+        char buffer[PATH_MAX];
+        uint32_t size = sizeof( buffer );
+        if ( _NSGetExecutablePath( buffer, &size ) != 0 ) throw std::runtime_error( "exe path buffer too small" );
+        return fs::canonical( fs::path( buffer ) );
+#endif
+    }
 
     inline fs::path home_dir( ) {
         const char* home;
@@ -19,6 +47,8 @@ namespace paths {
     }
 
     inline fs::path default_config_dir( ) {
+
+
 #if defined( __linux__ )
         return home_dir( ) / ".config" / APP_NAME;
 #elif defined( __APPLE__ )
