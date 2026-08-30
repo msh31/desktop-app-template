@@ -14,6 +14,7 @@ class CWindowManager {
         ~CWindowManager( ) { cleanup( ); }
 
         void run( std::function<void( )> fun );
+        void set_drop_callback( std::function<void( const std::vector<std::string>& )> );
 
     private:
         CConfig& m_config;
@@ -32,4 +33,7 @@ class CWindowManager {
         bool should_continue( );
         void remember_window_size( );
         void render_frame( );
+
+        void drop_callback( int count, const char** paths );
+        std::function<void( const std::vector<std::string>& )> m_drop_fn;
 };

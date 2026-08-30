@@ -8,6 +8,8 @@ class CDebugView : public CBaseView {
         void render( ) override;
         void on_exit( ) override;
 
+        void set_dropped_paths( const std::vector<std::string>& files );
+
     private:
         CAsyncQueue m_queue;
         std::optional<TaskHandle> m_task_handle;
@@ -17,4 +19,6 @@ class CDebugView : public CBaseView {
         std::string m_file_size; // shown with the proper uh suffix like GB, KB etc..
         std::string m_file_name;
         bool m_is_file_open = false;
+
+        std::vector<std::string> m_dropped_paths;
 };

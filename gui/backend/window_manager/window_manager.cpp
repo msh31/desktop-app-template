@@ -162,6 +162,18 @@ void CWindowManager::apply_content_scale( float scale ) {
     ImGui::GetStyle( ).FontScaleDpi = scale;
 }
 
+void CWindowManager::set_drop_callback(std::function<void(const std::vector<std::string>&)> fn ) {
+    m_drop_fn = fn;
+}
+
+void CWindowManager::drop_callback( int count, const char** paths ) {
+    std::vector<std::string> data = { };
+    for ( int i = 0; i < count; i++ ) {
+        data.emplace_back( paths[i] );
+    }
+    if ( m_drop_fn) m_drop_fn( data );
+}
+
 void CWindowManager::setup_imgui( ) {
     SPDLOG_INFO( "Setting up ImGui.." );
     m_imgui_ctx = ImGui::CreateContext( );
@@ -181,6 +193,10 @@ void CWindowManager::setup_imgui( ) {
 
     glfwSetWindowRefreshCallback( m_window, []( GLFWwindow* window ) {
         static_cast<CWindowManager*>( glfwGetWindowUserPointer( window ) )->render_frame( );
+    } );
+
+    glfwSetDropCallback( m_window, []( GLFWwindow* window, int count, const char** paths ) {
+        static_cast<CWindowManager*>( glfwGetWindowUserPointer( window ) )->drop_callback( count, paths );
     } );
 
     float xscale = 1.0f, yscale = 1.0f;

@@ -11,12 +11,15 @@
 //  #include <frontend/layout/ribbon/ribbon.hpp>
 //  #include <frontend/layout/none/none.hpp>
 
+class CDebugView;
+
 class CApp {
     public:
         explicit CApp( CConfig& config ) : m_config( config ) {}
 
         void init( );
         void render( );
+        void on_files_dropped( const std::vector<std::string>& );
 
     private:
         void refresh_background( );
@@ -24,6 +27,7 @@ class CApp {
         CConfig& m_config;
         CAsyncQueue m_queue;
         std::optional<TaskHandle> m_task_handle;
+        CDebugView* m_debug_view = nullptr;
 
         CUIManager m_ui_manager{ std::make_unique<CTabbarShell>( ) };
         // CUIManager m_ui_manager{ std::make_unique<CSidebarShell>( ) };

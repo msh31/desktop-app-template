@@ -36,7 +36,7 @@ void CApp::init( ) {
     SPDLOG_INFO( "Setting up application views.." );
     m_ui_manager.add_view( { std::make_unique<CHomeView>( ), ICON_HOME, "Home" } );
     m_ui_manager.add_view( { std::make_unique<CPipelineView>( ), ICON_PIPE, "Pipeline Demo" } );
-    m_ui_manager.add_view( { std::make_unique<CDebugView>( ), ICON_BUG, "Debug" } );
+    m_debug_view = static_cast<CDebugView*>( m_ui_manager.add_view( { std::make_unique<CDebugView>( ), ICON_BUG, "Debug" } ));
     m_ui_manager.add_view( { std::make_unique<CCacheDemoView>( ), ICON_CACHE, "Cache Demo" } );
     m_ui_manager.add_view( { std::make_unique<CImageDemoView>( ), ICON_IMAGE, "Image Demo" } );
     m_ui_manager.add_view( { std::make_unique<CLogView>( ), ICON_SCROLL, "Logs" } );
@@ -90,4 +90,8 @@ void CApp::render( ) {
     // rendered on top of the general UI
     Notify::render_notifications( );
     ConfirmDialog::render( );
+}
+
+void CApp::on_files_dropped(const std::vector<std::string>& files) {
+    m_debug_view->set_dropped_paths(files);
 }

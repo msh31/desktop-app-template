@@ -19,7 +19,9 @@ int main( ) {
         CApp app( config );
 
         app.init( );
+        window.set_drop_callback( [&app]( const auto& paths ) { app.on_files_dropped( paths ); } );
         SPDLOG_INFO( "Initialized succesfully!" );
+
         window.run( [&app] { app.render( ); } );
     } catch ( const std::exception& e ) {
         SPDLOG_CRITICAL( "Fatal: {}", e.what( ) );

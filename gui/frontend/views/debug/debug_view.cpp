@@ -12,7 +12,7 @@ void CDebugView::render( ) {
     m_queue.update( );
 
     {
-        ChildGuard buttons( "buttons", { 0.0f, 0.0f }, ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY );
+        ChildGuard buttons( "buttons", { 500.0f, 0.0f }, ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY );
 
         if ( ImGui::Button( "Click Me" ) ) {
             Notify::show_notification( "", "Click Me button has been clicked!", 2000 );
@@ -65,24 +65,24 @@ void CDebugView::render( ) {
     ImGui::SameLine( );
 
     {
-        ChildGuard scaling( "scaling", { 0.0f, 0.0f }, ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY );
+        ChildGuard scaling( "scaling", { 200.0f, 0.0f }, ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY );
         ImGui::Text( "Scaling" );
 
         if ( ImGui::Button( "Set scale to 2.0x" ) ) {
             ThemeManager::apply_scale( 2.0f );
         }
-        ImGui::SameLine( );
+
         if ( ImGui::Button( "Set scale to 1.5x" ) ) {
             ThemeManager::apply_scale( 1.5f );
         }
-        ImGui::SameLine( );
+
         if ( ImGui::Button( "reset scale" ) ) {
             ThemeManager::apply_scale( 1.0f );
         }
     }
 
     {
-        ChildGuard filepicker( "filepicker", { 0.0f, 0.0f }, ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY );
+        ChildGuard filepicker( "filepicker", { 500.0f, 0.0f }, ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY );
         ImGui::Text( "File Picker" );
 
         if ( ImGui::Button( "Open" ) ) {
@@ -132,6 +132,21 @@ void CDebugView::render( ) {
                 "Size: %s", m_file_size.c_str( ) ); // path can never be a directory, guaranteed by the NFD dependency
         }
     }
+
+    ImGui::SameLine( );
+
+    {
+        ChildGuard dragndrop( "dragndrop", { 0.0f, 350.0f }, ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY );
+        ImGui::Text( "Drag & Drop" );
+
+        for ( const auto& p : m_dropped_paths ) {
+            ImGui::TextDisabled( "Dropped: %s", p.c_str( ) );
+        }
+    }
+}
+
+void CDebugView::set_dropped_paths( const std::vector<std::string>& files ) {
+    m_dropped_paths = files;
 }
 
 void CDebugView::on_exit( ) {
