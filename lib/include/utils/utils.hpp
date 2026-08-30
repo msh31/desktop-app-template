@@ -1,5 +1,6 @@
 #pragma once
 #include <logger.hpp>
+#include <SHA256.h>
 
 #ifdef __APPLE__
     #include <ctime>
@@ -145,5 +146,24 @@ namespace utils { // All functions in this namespace should work across Windows,
         }
 
         return true;
+    }
+
+    static std::string hash_file( const fs::path& path ) {
+        if ( !fs::is_regular_file( path ) ) return { };
+
+        std::ifstream file( path, std::ios::binary );
+        if ( !file.is_open( ) ) return { };
+
+        SHA256 sha;
+        char buffer[8192];
+        while ( file.read( buffer, sizeof( buffer ) ) ) {
+            sha.update( reinterpret_cast<uint8_t*>( buffer ), file.gcount( ) );
+        }
+
+        if ( file.gcount( ) > 0 ) sha.update( reinterpret_cast<uint8_t*>( buffer ), file.gcount( ) );
+        file.close( );
+
+        std::array<uint8_t, 32> digest = sha.digest( );
+        return SHA256::toString( digest );
     }
 } // namespace utils

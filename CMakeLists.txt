@@ -170,6 +170,7 @@ set(template_lib_SOURCES
 	"lib/src/config/config.cpp"
 	"lib/src/text_pipeline/text_pipeline.cpp"
 	"lib/src/utils/network.cpp"
+	"vendor/sha256/src/SHA256.cpp"
 )
 
 add_library(template_lib STATIC)
@@ -183,6 +184,7 @@ target_compile_features(template_lib PUBLIC
 
 target_include_directories(template_lib PUBLIC
 	"lib/include"
+	"vendor/sha256/include"
 )
 
 target_link_libraries(template_lib PUBLIC
@@ -339,6 +341,7 @@ endif()
 # Target: template_tests
 set(template_tests_SOURCES
 	cmake.toml
+	"tests/crypto.cpp"
 	"tests/filesystem.cpp"
 )
 
