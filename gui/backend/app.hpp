@@ -3,9 +3,6 @@
 #include <backend/ui_manager/ui_manager.hpp>
 #include <async_queue/async_queue.hpp>
 
-#include <config/config.hpp>
-#include <utils/paths.hpp>
-
 #include <frontend/layout/tabbar/tabbar.hpp>
 // #include <frontend/layout/sidebar/sidebar.hpp>
 //  #include <frontend/layout/ribbon/ribbon.hpp>
@@ -15,8 +12,6 @@ class CDebugView;
 
 class CApp {
     public:
-        explicit CApp( CConfig& config ) : m_config( config ) {}
-
         void init( );
         void render( );
         void on_files_dropped( const std::vector<std::string>& );
@@ -24,7 +19,6 @@ class CApp {
     private:
         void refresh_background( );
 
-        CConfig& m_config;
         CAsyncQueue m_queue;
         std::optional<TaskHandle> m_task_handle;
         CDebugView* m_debug_view = nullptr;

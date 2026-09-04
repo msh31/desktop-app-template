@@ -3,8 +3,11 @@
 
 class CConfig {
     public:
-        CConfig( fs::path config_dir = paths::config_dir( ) );
+        CConfig( );
         ~CConfig( );
+
+        static CConfig& get( );
+
         void save( );
 
         struct AppConfig {
@@ -18,6 +21,12 @@ class CConfig {
         };
 
         AppConfig settings;
+
+        // delete copy & move constructors since there must only be 1 instance
+        CConfig( const CConfig& ) = delete;
+        CConfig& operator=( const CConfig& ) = delete;
+        CConfig( CConfig&& ) = delete;
+        CConfig& operator=( CConfig&& ) = delete;
 
     private:
         fs::path m_config_file = paths::config_dir( ) / "config.json";

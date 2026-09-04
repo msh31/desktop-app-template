@@ -6,17 +6,21 @@
 
 using json = nlohmann::json;
 
-CConfig::CConfig( fs::path config_dir ) : m_config_file( config_dir / "config.json" ) {
+CConfig::CConfig( ) {
     try {
-        if ( !fs::exists( config_dir ) ) {
-            if ( !fs::create_directories( config_dir ) ) {
+        if ( !fs::exists( paths::config_dir( ) ) ) {
+            if ( !fs::create_directories( paths::config_dir( ) ) ) {
                 throw std::runtime_error( "Failed to create config directory" );
             }
-            m_load_ok = true; //initial creation
-            save( );
         }
 
-        fs::create_directories( paths::backgrounds_dir( ) );
+        if ( !fs::exists( m_config_file ) ) {
+            fs::create_directories( paths::backgrounds_dir( ) );
+            fs::create_directories( paths::cache_dir( ) );
+
+            m_load_ok = true; // initial creation
+            save( );
+        }
 
         m_load_ok = load( );
     } catch ( const std::exception& err ) {
@@ -31,6 +35,11 @@ CConfig::~CConfig( ) {
     } catch ( const std::exception& err ) {
         SPDLOG_CRITICAL( "config destructor: {}", err.what( ) );
     }
+}
+
+CConfig& CConfig::get( ) {
+    static CConfig instance;
+    return instance;
 }
 
 void CConfig::save( ) {

@@ -2,6 +2,8 @@
 #include <branding.hpp>
 #include <logger.hpp>
 #include <utils/network.hpp>
+#include <config/config.hpp>
+#include <utils/paths.hpp>
 
 #include <frontend/icons.hpp>
 #include <frontend/theme/theme.hpp>
@@ -40,7 +42,7 @@ void CApp::init( ) {
     m_ui_manager.add_view( { std::make_unique<CCacheDemoView>( ), ICON_CACHE, "Cache Demo" } );
     m_ui_manager.add_view( { std::make_unique<CImageDemoView>( ), ICON_IMAGE, "Image Demo" } );
     m_ui_manager.add_view( { std::make_unique<CLogView>( ), ICON_SCROLL, "Logs" } );
-    m_ui_manager.set_settings_view( { std::make_unique<CSettingsView>( m_config ), ICON_GEAR, "Settings" } );
+    m_ui_manager.set_settings_view( { std::make_unique<CSettingsView>( ), ICON_GEAR, "Settings" } );
 
     SPDLOG_INFO( "Setting up statusbar.." );
     m_statusbar.add_left( { "I am a statusbar", "X" } );
@@ -49,19 +51,19 @@ void CApp::init( ) {
 }
 
 void CApp::refresh_background( ) {
-    if ( !m_config.settings.use_bg || m_config.settings.bg_name.empty( ) ) {
+    if ( !CConfig::get().settings.use_bg || CConfig::get().settings.bg_name.empty( ) ) {
         m_loaded_bg_name.clear( );
         return;
     }
 
-    if ( m_config.settings.bg_name == m_loaded_bg_name ) return;
+    if ( CConfig::get().settings.bg_name == m_loaded_bg_name ) return;
 
-    auto path = paths::backgrounds_dir( ) / m_config.settings.bg_name;
+    auto path = paths::backgrounds_dir( ) / CConfig::get().settings.bg_name;
     if ( fs::exists( path ) ) {
         m_background_image = CImageManager::get( ).load_from_disk( path, "background" );
-        m_loaded_bg_name = m_config.settings.bg_name;
+        m_loaded_bg_name = CConfig::get().settings.bg_name;
     } else {
-        m_config.settings.use_bg = false;
+        CConfig::get().settings.use_bg = false;
         Notify::show_notification(
             "Custom Background", "Failed to apply custom background because the file does not exist!", 1500 );
     }
@@ -71,7 +73,7 @@ void CApp::render( ) {
     refresh_background( );
     m_queue.update( );
 
-    bool use_bg = m_config.settings.use_bg;
+    bool use_bg = CConfig::get().settings.use_bg;
 
     if ( use_bg ) {
         ui::add_cover_image(
