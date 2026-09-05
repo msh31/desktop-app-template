@@ -64,7 +64,7 @@ jobs:
         run: ctest --test-dir build-portable -C Release --output-on-failure
 
       - name: Install (portable)
-        run: cmake --install build-portable --config Release --prefix install-portable
+        run: cmake --install build-portable --config Release --prefix install-portable --component app
 
       - name: Package (portable, Unix)
         if: runner.os != 'Windows'
