@@ -384,3 +384,12 @@ endif()
 set(CMKR_TARGET template_tests)
 enable_testing()
 add_test(NAME template_tests COMMAND template_tests)
+
+install(
+	TARGETS
+		template_app
+	DESTINATION
+		bin
+	COMPONENT
+		template_app
+)
