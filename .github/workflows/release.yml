@@ -8,6 +8,8 @@ jobs:
   build:
     name: ${{ matrix.platform }}
     runs-on: ${{ matrix.os }}
+    permissions:
+      contents: write
     strategy:
       fail-fast: false
       matrix:
@@ -81,6 +83,11 @@ jobs:
         with:
           name: ${{ matrix.platform }}-${{ matrix.arch }}-portable
           path: ${{ github.event.repository.name }}-*-portable.*
+
+      - name: Upload to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ github.event.repository.name }}-*-portable.*
 
       - name: Configure (installer)
         shell: bash
