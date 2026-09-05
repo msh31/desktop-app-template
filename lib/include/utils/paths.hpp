@@ -26,12 +26,12 @@ namespace paths {
         ssize_t len = readlink( "/proc/self/exe", buffer, sizeof( buffer ) - 1 );
         if ( len == -1 ) throw std::runtime_error( "readlink /proc/self/exe failed" );
         buffer[len] = '\0';
-        return fs::path( buffer );
+        return fs::path( buffer ).parent_path( );
 #elif defined( __APPLE__ )
         char buffer[PATH_MAX];
         uint32_t size = sizeof( buffer );
         if ( _NSGetExecutablePath( buffer, &size ) != 0 ) throw std::runtime_error( "exe path buffer too small" );
-        return fs::canonical( fs::path( buffer ) );
+        return fs::canonical( fs::path( buffer ) ).parent_path( );
 #endif
     }
 
