@@ -24,6 +24,9 @@ if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
 	set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS cmake.toml)
 endif()
 
+# Options
+option(APP_PORTABLE "" ON)
+
 # Variables
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(BUILD_GMOCK OFF)
@@ -177,6 +180,10 @@ add_library(template_lib STATIC)
 
 target_sources(template_lib PRIVATE ${template_lib_SOURCES})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${template_lib_SOURCES})
+
+target_compile_definitions(template_lib PUBLIC
+	"APP_PORTABLE=$<BOOL:${APP_PORTABLE}>"
+)
 
 target_compile_features(template_lib PUBLIC
 	cxx_std_23

@@ -14,6 +14,9 @@ if(WIN32)
 endif()
 """
 
+[options]
+APP_PORTABLE = true
+
 [variables]
 CMAKE_EXPORT_COMPILE_COMMANDS = true
 BUILD_GMOCK = false
@@ -73,6 +76,7 @@ include-directories = [
     "vendor/sha256/include"
 ]
 compile-features = ["cxx_std_23"]
+compile-definitions = ["APP_PORTABLE=$<BOOL:${APP_PORTABLE}>"]
 link-libraries = ["nlohmann_json::nlohmann_json", "spdlog::spdlog", "CURL::libcurl"]
 precompile-headers = ["lib/include/lib_pch.hpp"]
 
