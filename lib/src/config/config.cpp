@@ -10,7 +10,7 @@ CConfig::CConfig( ) {
     try {
         if ( !fs::exists( paths::config_dir( ) ) ) {
             if ( !fs::create_directories( paths::config_dir( ) ) ) {
-                throw std::runtime_error( "Failed to create config directory" );
+                throw std::runtime_error( "[Config] Failed to create config directory" );
             }
         }
 
@@ -24,16 +24,16 @@ CConfig::CConfig( ) {
 
         m_load_ok = load( );
     } catch ( const std::exception& err ) {
-        SPDLOG_CRITICAL( "config constructor: {}", err.what( ) );
+        SPDLOG_CRITICAL( "[Config] constructor: {}", err.what( ) );
     }
 }
 
 CConfig::~CConfig( ) {
     try {
-        SPDLOG_INFO( "[Config] saving config before exiting.." );
+        SPDLOG_INFO( "[Config] saving before exiting.." );
         save( );
     } catch ( const std::exception& err ) {
-        SPDLOG_CRITICAL( "config destructor: {}", err.what( ) );
+        SPDLOG_CRITICAL( "[Config] destructor: {}", err.what( ) );
     }
 }
 
@@ -44,7 +44,7 @@ CConfig& CConfig::get( ) {
 
 bool CConfig::save( ) {
     if ( !m_load_ok ) {
-        SPDLOG_ERROR( "[Config] failed to load config!" );
+        SPDLOG_ERROR( "[Config] failed to load!" );
         return false;
     }
     json data;
@@ -57,7 +57,7 @@ bool CConfig::save( ) {
 
     auto res = utils::atomic_write( m_config_file, data.dump( 4 ) );
     if ( !res ) {
-        SPDLOG_ERROR( "[Config] failed to save config!" );
+        SPDLOG_ERROR( "[Config] failed to save!" );
         return false;
     }
     return true;
@@ -65,17 +65,16 @@ bool CConfig::save( ) {
 
 bool CConfig::load( ) {
     json data;
-    bool load_ok = false;
 
     std::ifstream file( m_config_file.c_str( ) );
     if ( !file.is_open( ) ) {
-        SPDLOG_ERROR( "Failed to open config!" );
-        return load_ok;
+        SPDLOG_ERROR( "[Config] Failed to open!" );
+        return false;
     }
 
     try {
         data = json::parse( file );
-        if ( data.empty() ) return load_ok;
+        if ( data.empty() ) return false;
 
         settings.dark_mode = data.value( "dark_mode", true );
         settings.use_bg = data.value( "use_bg", false );
@@ -83,10 +82,19 @@ bool CConfig::load( ) {
 
         settings.window_w = data.value( "window_w", 0 );
         settings.window_h = data.value( "window_h", 0 );
-        load_ok = true;
     } catch ( json::exception& ex ) {
-        SPDLOG_CRITICAL( "config parsing error: {}", ex.what( ) );
-        return load_ok;
+        SPDLOG_CRITICAL( "[Config] parsing error: {}", ex.what( ) );
+        m_was_reset = true;
+        
+        std::error_code ec;
+        fs::rename( m_config_file, m_config_file.string( ) + ".bak", ec );
+        if ( ec ) {
+            SPDLOG_CRITICAL( "[Config] failed to backup config! this is bad..." );
+            return false;
+        }
+
+        settings = { };
+        return true;
     }
-    return load_ok;
+    return true;
 }

@@ -20,6 +20,10 @@
 #include <frontend/notification/notification.hpp>
 
 void CApp::init( ) {
+    if ( CConfig::get( ).was_reset( ) ) {
+        Notify::show_notification( "Config Warning", "Config was reset due to an issue, your old config is backed up.",  3000);
+    }
+
     m_task_handle = m_queue.run<bool>(
         []( TaskControl& control ) {
             if ( control.cancel_requested.load( ) ) throw TaskCancelled{ };

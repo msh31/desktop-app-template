@@ -9,6 +9,7 @@ class CConfig {
         static CConfig& get( );
 
         bool save( );
+        bool was_reset() { return m_was_reset; }
 
         struct AppConfig {
                 bool dark_mode = true;
@@ -33,4 +34,5 @@ class CConfig {
 
         bool load( );
         bool m_load_ok = false;
+        bool m_was_reset = false;
 };
