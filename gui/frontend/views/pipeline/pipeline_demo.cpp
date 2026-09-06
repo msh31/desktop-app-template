@@ -30,7 +30,7 @@ void CPipelineView::render( ) {
     }
 
     if ( ImGui::InputText( "##input", &m_input ) ) {
-        if ( !m_input.empty( ) ) m_result = m_pipeline.run( m_input );
+        m_result = m_pipeline.run( m_input );
     }
 
     if ( m_result ) {
