@@ -11,6 +11,7 @@ apple.languages = ["OBJC"]
 cmake-after = """
 if(WIN32)
   set(SPDLOG_WCHAR_FILENAMES ON)
+  set(CURL_USE_SCHANNEL ON)
 endif()
 """
 
@@ -102,11 +103,6 @@ include-directories = [
 compile-features = ["cxx_std_23"]
 link-libraries = ["template_lib", "imgui", "spdlog::spdlog", "nfd"]
 precompile-headers = ["gui/pch.hpp"]
-cmake-after = """
-if(WIN32)
-  set(CURL_USE_SCHANNEL ON)
-endif()
-"""
 
 [target.template_app.windows]
 link-libraries = ["Dwmapi"]

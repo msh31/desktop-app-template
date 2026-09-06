@@ -53,6 +53,7 @@ endif()
 
 if(WIN32)
   set(SPDLOG_WCHAR_FILENAMES ON)
+  set(CURL_USE_SCHANNEL ON)
 endif()
 
 include(FetchContent)
@@ -307,11 +308,6 @@ target_precompile_headers(template_app PRIVATE
 get_directory_property(CMKR_VS_STARTUP_PROJECT DIRECTORY ${PROJECT_SOURCE_DIR} DEFINITION VS_STARTUP_PROJECT)
 if(NOT CMKR_VS_STARTUP_PROJECT)
 	set_property(DIRECTORY ${PROJECT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT template_app)
-endif()
-
-set(CMKR_TARGET template_app)
-if(WIN32)
-  set(CURL_USE_SCHANNEL ON)
 endif()
 
 # Target: template_elevationhelper
