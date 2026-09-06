@@ -8,7 +8,7 @@ class CConfig {
 
         static CConfig& get( );
 
-        void save( );
+        bool save( );
 
         struct AppConfig {
                 bool dark_mode = true;

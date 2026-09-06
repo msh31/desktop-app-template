@@ -42,8 +42,11 @@ CConfig& CConfig::get( ) {
     return instance;
 }
 
-void CConfig::save( ) {
-    if ( !m_load_ok ) return;
+bool CConfig::save( ) {
+    if ( !m_load_ok ) {
+        SPDLOG_ERROR( "[Config] failed to load config!" );
+        return false;
+    }
     json data;
     data["dark_mode"] = settings.dark_mode;
     data["use_bg"] = settings.use_bg;
@@ -52,8 +55,12 @@ void CConfig::save( ) {
     data["window_w"] = settings.window_w;
     data["window_h"] = settings.window_h;
 
-    bool res = utils::atomic_write( m_config_file, data.dump( 4 ) );
-    if ( !res ) SPDLOG_ERROR( "[Config] Failed to save config!" );
+    auto res = utils::atomic_write( m_config_file, data.dump( 4 ) );
+    if ( !res ) {
+        SPDLOG_ERROR( "[Config] failed to save config!" );
+        return false;
+    }
+    return true;
 }
 
 bool CConfig::load( ) {

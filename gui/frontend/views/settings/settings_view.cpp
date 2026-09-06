@@ -83,8 +83,11 @@ void CSettingsView::render( ) {
 
         ImGui::SameLine( );
         if ( ImGui::Button( "Save" ) ) {
-            CConfig::get().save( );
-            Notify::show_notification( "Config", "Saved config!", 1500 );
+            if ( CConfig::get( ).save( ) ) {
+                Notify::show_notification( "Config", "Saved config!", 1500 );
+            } else {
+                Notify::show_notification( "Config", "Failed to save config!", 3000 );
+            }
         }
     }
 }
