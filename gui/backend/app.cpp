@@ -6,7 +6,6 @@
 #include <utils/paths.hpp>
 
 #include <frontend/icons.hpp>
-#include <frontend/theme/theme.hpp>
 #include <frontend/ui.hpp>
 
 #include <frontend/views/cache_demo/cache_demo_view.hpp>
