@@ -313,7 +313,6 @@ set(CMKR_TARGET template_app)
 if(WIN32)
   set(CURL_USE_SCHANNEL ON)
 endif()
-install(TARGETS template_app RUNTIME DESTINATION bin COMPONENT app)
 
 # Target: template_elevationhelper
 set(template_elevationhelper_SOURCES
@@ -385,3 +384,12 @@ endif()
 set(CMKR_TARGET template_tests)
 enable_testing()
 add_test(NAME template_tests COMMAND template_tests)
+
+install(
+	TARGETS
+		template_app
+	DESTINATION
+		bin
+	COMPONENT
+		app
+)

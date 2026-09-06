@@ -14,6 +14,11 @@ if(WIN32)
 endif()
 """
 
+[[install]]  
+targets = ["template_app"]  
+destination = "bin"  
+component = "app"
+
 [options]
 APP_PORTABLE = true
 
@@ -101,7 +106,6 @@ cmake-after = """
 if(WIN32)
   set(CURL_USE_SCHANNEL ON)
 endif()
-install(TARGETS template_app RUNTIME DESTINATION bin COMPONENT app)
 """
 
 [target.template_app.windows]
