@@ -6,6 +6,8 @@ class CDebugView : public CBaseView {
     public:
         ~CDebugView( ) override;
         void render( ) override;
+
+        void on_enter( ) override;
         void on_exit( ) override;
 
         void set_dropped_paths( const std::vector<std::string>& files );

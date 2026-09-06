@@ -8,6 +8,12 @@
 #include <frontend/notification/notification.hpp>
 #include <frontend/theme/theme.hpp>
 
+void CDebugView::on_enter( ) {
+    if ( m_file.is_open( ) ) {
+        m_file.close( );
+    }
+}
+
 void CDebugView::render( ) {
     m_queue.update( );
 
@@ -97,6 +103,7 @@ void CDebugView::render( ) {
             if ( result == NFD_OKAY ) {
                 std::string path( outPath );
                 NFD_FreePathU8( outPath );
+                m_file.close( );
                 m_file.open( path );
                 if ( m_file.is_open( ) ) {
                     m_file_path = path;
@@ -152,6 +159,9 @@ void CDebugView::set_dropped_paths( const std::vector<std::string>& files ) {
 void CDebugView::on_exit( ) {
     if ( m_file.is_open( ) ) {
         m_file.close( );
+        m_is_file_open = false;
+        m_file_name.clear( );
+        m_file_size.clear( );
         m_file_path.clear( );
     }
 }
