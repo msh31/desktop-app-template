@@ -82,6 +82,7 @@ bool CConfig::load( ) {
         settings.window_w = data.value( "window_w", 0 );
         settings.window_h = data.value( "window_h", 0 );
     } catch ( json::exception& ex ) {
+        file.close( );
         SPDLOG_CRITICAL( "[Config] parsing error: {}", ex.what( ) );
         m_was_reset = true;
         
