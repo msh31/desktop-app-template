@@ -23,6 +23,8 @@ class TaskHandle {
 
 class CAsyncQueue {
     public:
+        ~CAsyncQueue( ) { shutdown( ); }
+
         template <typename T>
         TaskHandle
         run( std::function<T( TaskControl& )> work, std::function<void( T )> on_complete,
@@ -40,7 +42,6 @@ class CAsyncQueue {
         void update( );
 
         void shutdown( );
-
     private:
         struct Task {
                 std::future<void> future;
