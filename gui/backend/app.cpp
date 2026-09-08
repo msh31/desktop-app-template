@@ -13,7 +13,6 @@
 #include <frontend/views/home/home_view.hpp>
 #include <frontend/views/image_demo/image_demo_view.hpp>
 #include <frontend/views/log/log_view.hpp>
-#include <frontend/views/pipeline/pipeline_demo.hpp>
 #include <frontend/views/settings/settings_view.hpp>
 
 #include <frontend/components/dialogs/confirm/confirm_dialog.hpp>
@@ -40,7 +39,6 @@ void CApp::init( ) {
 
     SPDLOG_INFO( "Setting up application views.." );
     m_ui_manager.add_view( { std::make_unique<CHomeView>( ), ICON_HOME, "Home" } );
-    m_ui_manager.add_view( { std::make_unique<CPipelineView>( ), ICON_PIPE, "Pipeline Demo" } );
     m_debug_view = static_cast<CDebugView*>( m_ui_manager.add_view( { std::make_unique<CDebugView>( ), ICON_BUG, "Debug" } ));
     m_ui_manager.add_view( { std::make_unique<CCacheDemoView>( ), ICON_CACHE, "Cache Demo" } );
     m_ui_manager.add_view( { std::make_unique<CImageDemoView>( ), ICON_IMAGE, "Image Demo" } );
