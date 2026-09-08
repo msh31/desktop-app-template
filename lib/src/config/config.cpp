@@ -74,7 +74,6 @@ bool CConfig::load( ) {
 
     try {
         data = json::parse( file );
-        if ( data.empty() ) return false;
 
         settings.dark_mode = data.value( "dark_mode", true );
         settings.use_bg = data.value( "use_bg", false );
