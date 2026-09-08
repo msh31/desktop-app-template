@@ -1,6 +1,8 @@
 #pragma once
+// a bit ugly
 #include <logger.hpp>
 #include <SHA256.h>
+#include <random>
 
 #ifdef __APPLE__
     #include <ctime>
@@ -105,8 +107,12 @@ namespace utils { // All functions in this namespace should work across Windows,
     static bool atomic_write( const fs::path& path, const std::string& content ) {
         if ( fs::is_directory( path ) ) return false;
 
+        std::random_device rd;
+        std::mt19937 gen( rd( ) );
+        std::string random = std::format( "{:x}", gen( ) );
+
         fs::path tmp_path = path;
-        tmp_path += ".tmp";
+        tmp_path += "_" + random + ".tmp";
 
         std::ofstream file( tmp_path, std::ios::binary );
         if ( !file.is_open( ) ) {
