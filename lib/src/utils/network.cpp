@@ -51,11 +51,25 @@ bool Network::download_file( const char* url, const std::string& output_path ) {
     curl_easy_setopt( handle.get( ), CURLOPT_WRITEDATA, fp );
 
     CURLcode res = curl_easy_perform( handle.get( ) );
-    fclose( fp );
-
     if ( res != CURLE_OK ) {
         SPDLOG_ERROR( "[Network] Failed to download file: {}", curl_easy_strerror( res ) );
-        fs::remove( tmp_path );
+        std::error_code ec;
+        fs::remove( tmp_path, ec );
+        if ( ec ) {
+            SPDLOG_ERROR( "[Network] Failed to remove the download failure: {}", ec.message( ) );
+            return false;
+        }
+        return false;
+    }
+
+    auto close_res = fclose( fp );
+    if ( close_res != 0 ) {
+        std::error_code ec;
+        fs::remove( tmp_path, ec );
+        if ( ec ) {
+            SPDLOG_ERROR( "[Network] Failed to remove the download failure: {}", ec.message( ) );
+            return false;
+        }
         return false;
     }
 
@@ -66,7 +80,7 @@ bool Network::download_file( const char* url, const std::string& output_path ) {
         std::error_code ecr;
         fs::remove( tmp_path, ecr );
         if ( ecr ) {
-            SPDLOG_ERROR( "[Network] Failed to remove the downloaded file during cleanup", ecr.message( ) );
+            SPDLOG_ERROR( "[Network] Failed to remove the downloaded file during cleanup: {}", ecr.message( ) );
             return false;
         }
         return false;
