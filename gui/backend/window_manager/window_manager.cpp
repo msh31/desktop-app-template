@@ -44,6 +44,9 @@ void CWindowManager::run( std::function<void( )> fun ) {
 void CWindowManager::render_frame( ) {
     if ( !m_render_fn ) return;
 
+    bool use_bg = CConfig::get( ).settings.use_bg;
+    float font_scale = CConfig::get( ).settings.font_scale;
+
     glClear( GL_COLOR_BUFFER_BIT );
 
     ImGui_ImplOpenGL3_NewFrame( );
@@ -60,15 +63,18 @@ void CWindowManager::render_frame( ) {
                                     ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_NoScrollbar |
                                     ImGuiWindowFlags_NoScrollWithMouse;
 
-    if ( CConfig::get().settings.use_bg ) {
+    if ( use_bg ) {
         window_flags |= ImGuiWindowFlags_NoBackground;
+        ImGui::PushStyleColor( ImGuiCol_ChildBg, ImVec4( 0, 0, 0, 0 ) );
     }
 
     ImGui::Begin( "Main Window", nullptr, window_flags );
+    ThemeManager::set_font_scale( font_scale );
 #ifndef NDEBUG
     ImGui::TextColored( ImColor( 220, 40, 30, 255 ), "DEBUG" );
 #endif // NDEBUG
     m_render_fn( );
+    if ( use_bg ) ImGui::PopStyleColor( );
     ImGui::End( );
     ImGui::Render( );
 

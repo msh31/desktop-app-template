@@ -51,6 +51,7 @@ bool CConfig::save( ) {
     data["dark_mode"] = settings.dark_mode;
     data["use_bg"] = settings.use_bg;
     data["bg_name"] = settings.bg_name;
+    data["font_scale"] = settings.font_scale;
 
     data["window_w"] = settings.window_w;
     data["window_h"] = settings.window_h;
@@ -78,6 +79,7 @@ bool CConfig::load( ) {
         settings.dark_mode = data.value( "dark_mode", true );
         settings.use_bg = data.value( "use_bg", false );
         settings.bg_name = data.value( "bg_name", std::string( "" ) );
+        settings.font_scale = data.value( "font_scale", 1.069f );
 
         settings.window_w = data.value( "window_w", 0 );
         settings.window_h = data.value( "window_h", 0 );
