@@ -13,6 +13,8 @@ class CDebugView : public CBaseView {
         void set_dropped_paths( const std::vector<std::string>& files );
 
     private:
+        void reset_file( );
+
         CAsyncQueue m_queue;
         std::optional<TaskHandle> m_task_handle;
 
