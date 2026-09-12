@@ -31,6 +31,7 @@ BUILD_EXAMPLES = false
 BUILD_LIBCURL_DOCS = false
 BUILD_MISC_DOCS = false
 BUILD_CURL_EXE = false
+CURL_USE_LIBSSH2 = false
 
 # dependencies
 [fetch-content.glfw]
