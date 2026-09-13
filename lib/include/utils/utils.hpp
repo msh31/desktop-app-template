@@ -142,6 +142,14 @@ namespace utils { // All functions in this namespace should work across Windows,
 
         file.close( );
 
+        #if defined( _WIN32 )
+        BOOL res = MoveFileExW( tmp_path.c_str( ), path.c_str( ), MOVEFILE_REPLACE_EXISTING );
+        if ( !res ) {
+            SPDLOG_ERROR( "[AtomicWrite]: rename error: {}", GetLastError( ) );
+            cleanup( tmp_path );
+            return false;
+        }
+#else
         std::error_code ec;
         fs::rename( tmp_path, path, ec );
 
@@ -150,7 +158,7 @@ namespace utils { // All functions in this namespace should work across Windows,
             cleanup( tmp_path );
             return false;
         }
-
+#endif
         return true;
     }
 
