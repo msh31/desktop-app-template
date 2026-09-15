@@ -1,13 +1,15 @@
 #pragma once
 #include <branding.hpp>
 
+// clang-format off
 #if defined( __linux__ )
-#include <unistd.h>
-#include <climits>
+    #include <unistd.h>
+    #include <climits>
 #elif defined( __APPLE__ )
-#include <mach-o/dyld.h>
-#include <climits>
+    #include <mach-o/dyld.h>
+    #include <climits>
 #endif
+// clang-format on
 
 namespace fs = std::filesystem;
 
@@ -15,7 +17,7 @@ namespace paths {
     inline fs::path g_config_dir;
     inline void set_config_dir( const fs::path& p ) { g_config_dir = p; }
 
-    inline fs::path exe_dir() {
+    inline fs::path exe_dir( ) {
 #if defined( _WIN32 )
         wchar_t szFileName[MAX_PATH];
         GetModuleFileNameW( NULL, szFileName, MAX_PATH );
@@ -48,7 +50,6 @@ namespace paths {
 
     inline fs::path default_config_dir( ) {
 
-
 #if defined( __linux__ )
         return home_dir( ) / ".config" / APP_NAME;
 #elif defined( __APPLE__ )
@@ -75,7 +76,7 @@ namespace paths {
     inline fs::path cache_dir( ) { return config_dir( ) / "cache"; }
     inline fs::path backgrounds_dir( ) { return config_dir( ) / "backgrounds"; }
 
-    inline fs::path demo_disk_cache_file( ) { return config_dir( ) / "demo_cache.json"; }
+    inline fs::path demo_disk_cache_file( ) { return cache_dir( ) / "demo_cache.json"; }
 
     inline fs::path documents_dir( ) {
 #if defined( _WIN32 )
