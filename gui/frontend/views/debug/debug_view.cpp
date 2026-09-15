@@ -8,9 +8,7 @@
 #include <frontend/notification/notification.hpp>
 #include <frontend/theme/theme.hpp>
 
-void CDebugView::on_enter( ) {
-    reset_file( );
-}
+void CDebugView::on_enter( ) { reset_file( ); }
 
 void CDebugView::render( ) {
     m_queue.update( );
@@ -146,13 +144,9 @@ void CDebugView::render( ) {
     }
 }
 
-void CDebugView::set_dropped_paths( const std::vector<std::string>& files ) {
-    m_dropped_paths = files;
-}
+void CDebugView::set_dropped_paths( const std::vector<std::string>& files ) { m_dropped_paths = files; }
 
-void CDebugView::on_exit( ) {
-    reset_file( );
-}
+void CDebugView::on_exit( ) { reset_file( ); }
 
 void CDebugView::reset_file( ) {
     if ( m_file.is_open( ) ) {

@@ -1,7 +1,7 @@
 #pragma once
 // a bit ugly
-#include <logger.hpp>
 #include <SHA256.h>
+#include <logger.hpp>
 #include <random>
 
 #ifdef __APPLE__
@@ -142,7 +142,7 @@ namespace utils { // All functions in this namespace should work across Windows,
 
         file.close( );
 
-        #if defined( _WIN32 )
+#if defined( _WIN32 )
         BOOL res = MoveFileExW( tmp_path.c_str( ), path.c_str( ), MOVEFILE_REPLACE_EXISTING );
         if ( !res ) {
             SPDLOG_ERROR( "[AtomicWrite]: rename error: {}", GetLastError( ) );

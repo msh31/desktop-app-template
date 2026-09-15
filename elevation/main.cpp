@@ -1,6 +1,6 @@
 
 
-auto main() -> int {
+auto main( ) -> int {
     std::println( "hello" );
-	return 0;
+    return 0;
 }

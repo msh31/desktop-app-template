@@ -87,7 +87,7 @@ bool CConfig::load( ) {
         file.close( );
         SPDLOG_CRITICAL( "[Config] parsing error: {}", ex.what( ) );
         m_was_reset = true;
-        
+
         std::error_code ec;
         fs::rename( m_config_file, m_config_file.string( ) + ".bak", ec );
         if ( ec ) {

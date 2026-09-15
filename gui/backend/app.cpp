@@ -1,8 +1,8 @@
 #include "app.hpp"
 #include <branding.hpp>
+#include <config/config.hpp>
 #include <logger.hpp>
 #include <utils/network.hpp>
-#include <config/config.hpp>
 #include <utils/paths.hpp>
 
 #include <frontend/icons.hpp>
@@ -20,7 +20,8 @@
 
 void CApp::init( ) {
     if ( CConfig::get( ).was_reset( ) ) {
-        Notify::show_notification( "Config Warning", "Config was reset due to an issue, your old config is backed up.",  3000);
+        Notify::show_notification(
+            "Config Warning", "Config was reset due to an issue, your old config is backed up.", 3000 );
     }
 
     m_task_handle = m_queue.run<bool>(
@@ -32,14 +33,14 @@ void CApp::init( ) {
             if ( nva ) Notify::show_notification( "Update Check", "A new update is available to download!", 1500 );
             m_task_handle = std::nullopt;
         },
-        []( const std::exception& ex ) { Notify::show_notification( "Error", ex.what( ), 5000 ); 
-    } );
+        []( const std::exception& ex ) { Notify::show_notification( "Error", ex.what( ), 5000 ); } );
 
     refresh_background( );
 
     SPDLOG_INFO( "Setting up application views.." );
     m_ui_manager.add_view( { std::make_unique<CHomeView>( ), ICON_HOME, "Home" } );
-    m_debug_view = static_cast<CDebugView*>( m_ui_manager.add_view( { std::make_unique<CDebugView>( ), ICON_BUG, "Debug" } ));
+    m_debug_view =
+        static_cast<CDebugView*>( m_ui_manager.add_view( { std::make_unique<CDebugView>( ), ICON_BUG, "Debug" } ) );
     m_ui_manager.add_view( { std::make_unique<CCacheDemoView>( ), ICON_CACHE, "Cache Demo" } );
     m_ui_manager.add_view( { std::make_unique<CImageDemoView>( ), ICON_IMAGE, "Image Demo" } );
     m_ui_manager.add_view( { std::make_unique<CLogView>( ), ICON_SCROLL, "Logs" } );
@@ -52,14 +53,14 @@ void CApp::init( ) {
 }
 
 void CApp::refresh_background( ) {
-    if ( !CConfig::get().settings.use_bg || CConfig::get().settings.bg_name.empty( ) ) {
+    if ( !CConfig::get( ).settings.use_bg || CConfig::get( ).settings.bg_name.empty( ) ) {
         m_loaded_bg_name.clear( );
         return;
     }
 
-    if ( CConfig::get().settings.bg_name == m_loaded_bg_name ) return;
+    if ( CConfig::get( ).settings.bg_name == m_loaded_bg_name ) return;
 
-    auto path = paths::backgrounds_dir( ) / CConfig::get().settings.bg_name;
+    auto path = paths::backgrounds_dir( ) / CConfig::get( ).settings.bg_name;
     if ( fs::exists( path ) ) {
         auto img = CImageManager::get( ).load_from_disk( path, "background" );
         if ( img.texture_id == 0 ) {
@@ -68,9 +69,9 @@ void CApp::refresh_background( ) {
             return;
         }
         m_background_image = img;
-        m_loaded_bg_name = CConfig::get().settings.bg_name;
+        m_loaded_bg_name = CConfig::get( ).settings.bg_name;
     } else {
-        CConfig::get().settings.use_bg = false;
+        CConfig::get( ).settings.use_bg = false;
         Notify::show_notification(
             "Custom Background", "Failed to apply custom background because the file does not exist!", 1500 );
     }
@@ -80,7 +81,7 @@ void CApp::render( ) {
     refresh_background( );
     m_queue.update( );
 
-    bool use_bg = CConfig::get().settings.use_bg;
+    bool use_bg = CConfig::get( ).settings.use_bg;
 
     if ( use_bg ) {
         ui::add_cover_image(
@@ -101,6 +102,4 @@ void CApp::render( ) {
     ConfirmDialog::render( );
 }
 
-void CApp::on_files_dropped(const std::vector<std::string>& files) {
-    m_debug_view->set_dropped_paths(files);
-}
+void CApp::on_files_dropped( const std::vector<std::string>& files ) { m_debug_view->set_dropped_paths( files ); }

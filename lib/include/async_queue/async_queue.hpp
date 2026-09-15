@@ -42,6 +42,7 @@ class CAsyncQueue {
         void update( );
 
         void shutdown( );
+
     private:
         struct Task {
                 std::future<void> future;

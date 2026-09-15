@@ -1,7 +1,7 @@
 #include <backend/app.hpp>
 #include <backend/window_manager/window_manager.hpp>
-#include <logger.hpp>
 #include <curl/curl.h>
+#include <logger.hpp>
 
 #ifdef _WIN32 // forces Windows to treat the app as a GUI Application
     #pragma comment( linker, "/subsystem:windows /entry:mainCRTStartup" )

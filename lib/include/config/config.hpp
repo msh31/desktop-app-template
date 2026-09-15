@@ -9,7 +9,7 @@ class CConfig {
         static CConfig& get( );
 
         bool save( );
-        bool was_reset() { return m_was_reset; }
+        bool was_reset( ) { return m_was_reset; }
 
         struct AppConfig {
                 bool dark_mode = true;

@@ -1,6 +1,6 @@
 #pragma once
-#include <frontend/views/base_view.hpp>
 #include <async_queue/async_queue.hpp>
+#include <frontend/views/base_view.hpp>
 
 class CDebugView : public CBaseView {
     public:

@@ -10,10 +10,10 @@
 void CSettingsView::on_enter( ) {
     m_backgrounds.clear( );
 
-    //this is over engineered as hell.
-    //by this point, the program will have created this DIRECTORY itself and therefore IS GUARANTEED to be a directory.
-    // i hate this.
-    if ( fs::exists( paths::backgrounds_dir( ) ) && fs::is_directory( paths::backgrounds_dir() ) ) {
+    // this is over engineered as hell.
+    // by this point, the program will have created this DIRECTORY itself and therefore IS GUARANTEED to be a directory.
+    //  i hate this.
+    if ( fs::exists( paths::backgrounds_dir( ) ) && fs::is_directory( paths::backgrounds_dir( ) ) ) {
         for ( const auto& f :
               fs::directory_iterator( paths::backgrounds_dir( ), fs::directory_options::skip_permission_denied ) ) {
             if ( f.is_regular_file( ) && utils::is_image_file( f.path( ) ) ) {
@@ -43,7 +43,8 @@ void CSettingsView::render( ) {
         ImGui::Separator( );
 
         ImGui::Text( "Font scale" );
-        ImGui::SliderFloat("##f_scale_slider", &CConfig::get( ).settings.font_scale, m_font_scale_min, m_font_scale_max );
+        ImGui::SliderFloat(
+            "##f_scale_slider", &CConfig::get( ).settings.font_scale, m_font_scale_min, m_font_scale_max );
 
         ImGui::Separator( );
 

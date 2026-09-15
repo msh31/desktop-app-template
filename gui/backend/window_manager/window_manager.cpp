@@ -6,7 +6,6 @@
 #include <frontend/fonts/font_registry.hpp>
 #include <frontend/theme/theme.hpp>
 
-
 #if defined( _WIN32 )
     #define GLFW_EXPOSE_NATIVE_WIN32
     #include <GLFW/glfw3native.h>
@@ -88,7 +87,7 @@ static void error_callback( int error, const char* description ) {
     callback_error_triggered = true;
 }
 
-void CWindowManager::cleanup() {
+void CWindowManager::cleanup( ) {
     if ( m_imgui_backend_init_gl3 ) {
         ImGui_ImplOpenGL3_Shutdown( );
     }
@@ -115,8 +114,8 @@ void CWindowManager::setup_opengl( ) {
     glfwWindowHint( GLFW_CONTEXT_VERSION_MINOR, 3 );
     glfwWindowHint( GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE );
 
-    int width = CConfig::get().settings.window_w;
-    int height = CConfig::get().settings.window_h;
+    int width = CConfig::get( ).settings.window_w;
+    int height = CConfig::get( ).settings.window_h;
     if ( width <= 0 || height <= 0 ) {
         // no persisted size yet - derive a sane default from the primary monitor instead of a hardcoded resolution
         width = kMinWindowW;
@@ -137,7 +136,7 @@ void CWindowManager::setup_opengl( ) {
     }
 
 #if defined( _WIN32 )
-    BOOL dark_mode = CConfig::get().settings.dark_mode;
+    BOOL dark_mode = CConfig::get( ).settings.dark_mode;
     DwmSetWindowAttribute(
         glfwGetWin32Window( m_window ), DWMWA_USE_IMMERSIVE_DARK_MODE, &dark_mode, sizeof( dark_mode ) );
 #endif
@@ -154,8 +153,8 @@ void CWindowManager::setup_opengl( ) {
 void CWindowManager::remember_window_size( ) {
     int w = 0, h = 0;
     glfwGetWindowSize( m_window, &w, &h );
-    CConfig::get().settings.window_w = w;
-    CConfig::get().settings.window_h = h;
+    CConfig::get( ).settings.window_w = w;
+    CConfig::get( ).settings.window_h = h;
 }
 
 void CWindowManager::apply_content_scale( float scale ) {
@@ -168,16 +167,14 @@ void CWindowManager::apply_content_scale( float scale ) {
     ImGui::GetStyle( ).FontScaleDpi = scale;
 }
 
-void CWindowManager::set_drop_callback(std::function<void(const std::vector<std::string>&)> fn ) {
-    m_drop_fn = fn;
-}
+void CWindowManager::set_drop_callback( std::function<void( const std::vector<std::string>& )> fn ) { m_drop_fn = fn; }
 
 void CWindowManager::drop_callback( int count, const char** paths ) {
     std::vector<std::string> data = { };
     for ( int i = 0; i < count; i++ ) {
         data.emplace_back( paths[i] );
     }
-    if ( m_drop_fn) m_drop_fn( data );
+    if ( m_drop_fn ) m_drop_fn( data );
 }
 
 void CWindowManager::setup_imgui( ) {
@@ -219,5 +216,5 @@ void CWindowManager::setup_imgui( ) {
         cleanup( );
         throw std::runtime_error( "Failed to initialize ImGui" );
     }
-    ThemeManager::apply_colors( CConfig::get().settings.dark_mode ? ThemeType::Dark : ThemeType::Light );
+    ThemeManager::apply_colors( CConfig::get( ).settings.dark_mode ? ThemeType::Dark : ThemeType::Light );
 }
