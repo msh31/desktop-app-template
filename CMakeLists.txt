@@ -64,6 +64,7 @@ endif()
 if(APPLE)
   set(CURL_BROTLI OFF CACHE STRING "" FORCE)
   set(CURL_ZSTD OFF CACHE STRING "" FORCE)
+  set(OPENSSL_USE_STATIC_LIBS TRUE)
 endif()
 
 include(FetchContent)
