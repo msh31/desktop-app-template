@@ -8,20 +8,25 @@ name = "Desktop App Template"
 description = "A C++ template for building cross-platform desktop apps with ImGui and OpenGL"
 languages = ["C", "CXX"]
 apple.languages = ["OBJC"]
+include-after = ["cmake/packaging.cmake"]
 cmake-after = """
 if(WIN32)
   set(SPDLOG_WCHAR_FILENAMES ON)
   set(CURL_USE_SCHANNEL ON)
 endif()
+
+if(APPLE)
+  set(CURL_USE_SECTRANSP ON)
+endif()
 """
+
+[options]
+APP_PORTABLE = true
 
 [[install]]  
 targets = ["template_app"]  
 destination = "bin"  
 component = "app"
-
-[options]
-APP_PORTABLE = true
 
 [variables]
 CMAKE_EXPORT_COMPILE_COMMANDS = true
@@ -32,6 +37,10 @@ BUILD_LIBCURL_DOCS = false
 BUILD_MISC_DOCS = false
 BUILD_CURL_EXE = false
 CURL_USE_LIBSSH2 = false
+USE_NGHTTP2 = false
+USE_LIBIDN2 = false
+CURL_BROTLI = false
+CURL_ZSTD = false
 
 # dependencies
 [fetch-content.glfw]

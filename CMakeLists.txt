@@ -36,6 +36,10 @@ set(BUILD_LIBCURL_DOCS OFF)
 set(BUILD_MISC_DOCS OFF)
 set(BUILD_CURL_EXE OFF)
 set(CURL_USE_LIBSSH2 OFF)
+set(USE_NGHTTP2 OFF)
+set(USE_LIBIDN2 OFF)
+set(CURL_BROTLI OFF)
+set(CURL_ZSTD OFF)
 
 project("Desktop App Template"
 	LANGUAGES
@@ -52,9 +56,15 @@ if(APPLE) # apple
 
 endif()
 
+include("cmake/packaging.cmake")
+
 if(WIN32)
   set(SPDLOG_WCHAR_FILENAMES ON)
   set(CURL_USE_SCHANNEL ON)
+endif()
+
+if(APPLE)
+  set(CURL_USE_SECTRANSP ON)
 endif()
 
 include(FetchContent)
