@@ -7,7 +7,7 @@
     #pragma comment( linker, "/subsystem:windows /entry:mainCRTStartup" )
 #endif
 
-int main( ) {
+auto main( ) -> int {
     curl_global_init( CURL_GLOBAL_ALL );
     try {
 #if APP_PORTABLE
