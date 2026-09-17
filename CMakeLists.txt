@@ -63,10 +63,6 @@ if(WIN32)
   set(CURL_USE_SCHANNEL ON)
 endif()
 
-if(APPLE)
-  set(CURL_USE_SECTRANSP ON)
-endif()
-
 include(FetchContent)
 
 # Fix warnings about DOWNLOAD_EXTRACT_TIMESTAMP
